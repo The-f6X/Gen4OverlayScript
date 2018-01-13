@@ -4,6 +4,8 @@ import sys
 import shutil
 import time
 import os
+from io import TextIOWrapper
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -11,10 +13,8 @@ x = np.arange(1)
 TEAM_PATH = 'team.txt'
 
 
-def fetch_raw_team() -> str:
-    with open(TEAM_PATH) as team_file:
-        raw_team = team_file.read()
-    return raw_team
+def fetch_raw_team(handle: TextIOWrapper) -> str:
+    return handle.read()
 
 
 def parse_team(raw_team: str) -> list:
@@ -87,8 +87,9 @@ def make_plot(maxHP,current,output):
 
 
 def main():
+    team_file = open(TEAM_PATH)
     saved_state = ''
-    fresh_state = fetch_raw_team()
+    fresh_state = fetch_raw_team(team_file)
     while True:
         if not fresh_state or saved_state == fresh_state:
             continue
