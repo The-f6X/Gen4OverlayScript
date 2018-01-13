@@ -14,7 +14,7 @@ TEAM_PATH = 'team.txt'
 
 
 def fetch_raw_team(handle: TextIOWrapper) -> str:
-    return handle.read()
+    return handle.read().strip()
 
 
 def parse_team(raw_team: str) -> list:
@@ -22,8 +22,8 @@ def parse_team(raw_team: str) -> list:
     counter = 0
     Status = ''
 
-    for line in raw_team.split('\n'):
-        line = line.strip()
+    for entry in raw_team.split('\n'):
+        line = entry.strip()
         if counter == 0:
             lst = line.split(',')
             lst2 = lst[0].split(' = ')
@@ -173,5 +173,4 @@ def main():
                 make_plot(team[5][2],team[5][1],'health6.png')
         except Exception:
             pass
-        break
 main()
