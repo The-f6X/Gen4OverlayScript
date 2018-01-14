@@ -87,9 +87,9 @@ def make_plot(maxHP,current,output):
 
 
 def main():
-    team_file = open(TEAM_PATH)
     saved_state = ''
     while True:
+        team_file = open(TEAM_PATH)
         fresh_state = fetch_raw_team(team_file)
         if not fresh_state or saved_state == fresh_state:
             continue
