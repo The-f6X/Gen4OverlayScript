@@ -110,6 +110,11 @@ def make_plot(max_hp: int, current_hp: int, out_path: str):
 
 
 def main():
+    pokemon_src_dir = r'C:\Users\Daniel\Pictures\Twitch\sugimori\\'
+    pokemon_dst_dir = r'C:\Users\Daniel\Pictures\Twitch\NDSRead\team images\\'
+    obs_asset_dir = r'C:\Users\Daniel\Pictures\Twitch\NDSRead\\'
+    img_type = '.png'
+
     saved_state = ''
     while True:
         team_file = open(TEAM_PATH)
@@ -122,8 +127,8 @@ def main():
         try:
             for i in range(6):  # TODO technically we shouldn't assume 6 pokemon all the time
                 shutil.copyfile(
-                        src=f'C:\\Users\\Daniel\\Pictures\\Twitch\\sugimori\\{team[i][0]}.png',
-                        dst=f'C:\\Users\\Daniel\\Pictures\\Twitch\\NDSRead\\team images\\__party{i + 1}.png')
+                        src=f'{pokemon_src_dir}{team[i][0]}{img_type}',
+                        dst=f'{pokemon_dst_dir}__party{i + 1}{img_type}')
 
                 status_text = f'Lvl: {team[i][3]}\n' + \
                               f'HP: {team[i][1]}/{team[i][2]}\n' + \
@@ -132,10 +137,10 @@ def main():
                 with open(f'HP{i + 1}.txt', mode='w') as text_file:
                     text_file.write(status_text)
 
-                if team[i][2] == 'A':
+                if team[i][2] == 'A':  # TODO add these states to an enum or something
                     shutil.copyfile(
-                            src='C:\\Users\\Daniel\\Pictures\\Twitch\\NDSRead\\Blank.png',
-                            dst=f'C:\\Users\\Daniel\\Pictures\\Twitch\\NDSRead\\health{i + 1}.png')
+                            src=f'{obs_asset_dir}Blank{img_type}',
+                            dst=f'{obs_asset_dir}health{i + 1}{img_type}')
                 else:
                     make_plot(
                             max_hp=team[i][2],
