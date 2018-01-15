@@ -1,6 +1,9 @@
 # output dir
 out/
 
+# do not track assets
+assets/
+
 .venv/
 .idea/
 
