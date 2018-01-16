@@ -110,7 +110,9 @@ def make_plot(max_hp: int, current_hp: int, out_path: str):
 
 
 def parse_my_args_brumther() -> argparse.Namespace:
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+            description="""
+            The_F6X's Pokemon Overlay Script. will read teamfile from `./team.txt` by default.""")
     parser.add_argument('-i', '--input',
                         help='path to input teamfile',
                         default='team.txt')
