@@ -23,8 +23,8 @@ class SimpleLogger:
     class Level(IntEnum):
         SILENT = -2
         ERROR = -1
-        INFO = 0
-        WARN = 1
+        WARN = 0
+        INFO = 1
         DEBUG = 2
 
     def __init__(self, log_level: Level = Level.INFO):
@@ -33,20 +33,20 @@ class SimpleLogger:
         self._log_state = log_level
 
     def debug(self, msg: str):
-        self._emit(f'[DEBUG] {msg}', self.Level.DEBUG)
+        self._emit(msg, self.Level.DEBUG)
 
     def error(self, msg: str):
-        self._emit(f'[ERROR] {msg}', self.Level.ERROR)
+        self._emit(msg, self.Level.ERROR)
 
     def info(self, msg: str):
-        self._emit(f'[INFO] {msg}', self.Level.INFO)
+        self._emit(msg, self.Level.INFO)
 
     def warn(self, msg: str):
-        self._emit(f'[WARN] {msg}', self.Level.WARN)
+        self._emit(msg, self.Level.WARN)
 
     def _emit(self, msg: str, level: Level):
         if level <= self._log_state:
-            print(f'({time.strftime("%H:%M")}) {msg}', file=sys.stderr)
+            print(f'{time.strftime("%H:%M:%S")} [{level.name}] {msg}', file=sys.stderr)
 
 
 ################################################################################
@@ -183,7 +183,7 @@ def main():
     team_path = config.input
     assets_dir = config.assets
     output_dir = config.output
-    log_level = SimpleLogger.Level.SILENT if config.silent else config.verbosity
+    log_level = SimpleLogger.Level.SILENT if config.silent else config.verbosity + 1
     log = SimpleLogger(log_level)
     saved_state = ''
 
