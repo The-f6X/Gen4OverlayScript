@@ -2,6 +2,7 @@
 import argparse
 import shutil
 import time
+from enum import Enum, EnumMeta
 from io import TextIOWrapper
 
 import numpy
@@ -11,26 +12,33 @@ from matplotlib.pyplot import clf as clear_figures
 X_ARRAY: numpy.ndarray = numpy.arange(1)
 
 
-# TODO replace this with a StatusCondition enum, if possible
-def condition_from_int(state: int) -> str:
-    status = ''
-    if state == 0:
-        status = 'Healthy'
-    elif state in range(1, 7):  # this is going to give us some trouble
-        status = 'Sleep'
-    elif state == 8:
-        status = 'Poisoned'
-    elif state == 16:
-        status = 'Burned'
-    elif state == 32:
-        status = 'Frozen'
-    elif state == 64:
-        status = 'Paralyzed'
-    elif state == 128:
-        status = 'Toxic'
+################################################################################
+# StatusCondition.py
+################################################################################
 
-    return status
+class _StatusConditionMeta(EnumMeta):
+    def __call__(cls, value, *args, **kwargs):
+        if value in range(1, 8):  # handles sleep state edge case
+            value = 1             # normalizes multiple values for sleep to the actual value
+        return super().__call__(value, *args, **kwargs)
 
+
+class StatusCondition(Enum, metaclass=_StatusConditionMeta):
+    HEALTHY = 0
+    SLEEP = 1
+    POISONED = 8
+    BURNED = 16
+    FROZEN = 32
+    PARALYZED = 64
+    TOXIC = 128
+
+    def __str__(self):
+        return self.name.title()
+
+
+################################################################################
+# Script.py
+################################################################################
 
 def fetch_raw_team(handle: TextIOWrapper) -> str:
     return handle.read().strip()
@@ -68,7 +76,7 @@ def parse_team(raw_team: str) -> list:
             elif int(lst3[1]) == 0:
                 status = 'Fainted'
             else:
-                status = condition_from_int(int(lst7[1]))
+                status = StatusCondition(int(lst7[1]))
             pokemon = [name, health, max_hp, level, status]
             team.append(pokemon)
         if parse_state == 2:
