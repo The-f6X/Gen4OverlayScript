@@ -20,32 +20,32 @@ X_ARRAY: numpy.ndarray = numpy.arange(1)
 ################################################################################
 
 class SimpleLogger:
-    class LogState(IntEnum):
+    class Level(IntEnum):
         SILENT = -2
         ERROR = -1
         INFO = 0
         WARN = 1
         DEBUG = 2
 
-    def __init__(self, log_state: LogState = LogState.INFO):
-        if log_state > max(self.LogState):
-            log_state = max(self.LogState)
-        self._log_state = log_state
+    def __init__(self, log_level: Level = Level.INFO):
+        if log_level > max(self.Level):
+            log_level = max(self.Level)
+        self._log_state = log_level
 
     def debug(self, msg: str):
-        self._emit(f'[DEBUG] {msg}', self.LogState.DEBUG)
+        self._emit(f'[DEBUG] {msg}', self.Level.DEBUG)
 
     def error(self, msg: str):
-        self._emit(f'[ERROR] {msg}', self.LogState.ERROR)
+        self._emit(f'[ERROR] {msg}', self.Level.ERROR)
 
     def info(self, msg: str):
-        self._emit(f'[INFO] {msg}', self.LogState.INFO)
+        self._emit(f'[INFO] {msg}', self.Level.INFO)
 
     def warn(self, msg: str):
-        self._emit(f'[WARN] {msg}', self.LogState.WARN)
+        self._emit(f'[WARN] {msg}', self.Level.WARN)
 
-    def _emit(self, msg: str, state: LogState):
-        if state <= self._log_state:
+    def _emit(self, msg: str, level: Level):
+        if level <= self._log_state:
             print(f'({time.strftime("%H:%M")}) {msg}', file=sys.stderr)
 
 
@@ -183,7 +183,7 @@ def main():
     team_path = config.input
     assets_dir = config.assets
     output_dir = config.output
-    log_level = SimpleLogger.LogState.SILENT if config.silent else config.verbosity
+    log_level = SimpleLogger.Level.SILENT if config.silent else config.verbosity
     log = SimpleLogger(log_level)
     saved_state = ''
 
