@@ -241,7 +241,7 @@ def main():
         team = _parse_team(fresh_state)
         saved_state = fresh_state
 
-        for i in range(6):  # TODO technically we shouldn't assume 6 pokemon all the time
+        for i in range(len(team)):
             pokemon = team[i]
             shutil.copyfile(
                     src=f'{assets_dir}{pokemon.id}.png',
