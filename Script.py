@@ -42,7 +42,7 @@ class SimpleLogger:
 
     def _emit(self, msg: str, state: LogState):
         if state <= self._log_state:
-            print(msg, file=sys.stderr)
+            print(f'({time.strftime("%H:%M")}) {msg}', file=sys.stderr)
 
 
 ################################################################################
