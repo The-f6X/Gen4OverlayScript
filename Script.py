@@ -74,11 +74,11 @@ class StatusCondition(Enum, metaclass=_StatusConditionMeta):
 # Script.py
 ################################################################################
 
-def fetch_raw_team(handle: TextIO) -> str:
+def _fetch_raw_team(handle: TextIO) -> str:
     return handle.read().strip()
 
 
-def parse_team(raw_team: str) -> List[List[Any]]:
+def _parse_team(raw_team: str) -> List[List[Any]]:
     team = []
     parse_state = 0
 
@@ -119,7 +119,7 @@ def parse_team(raw_team: str) -> List[List[Any]]:
     return team
 
 
-def make_plot(max_hp: int, current_hp: int, out_path: str):
+def _make_plot(max_hp: int, current_hp: int, out_path: str):
     clear_figures()
     health_percent = current_hp / max_hp
     bar_height = 50 / 96  # TODO make configurable or just less magic
@@ -151,7 +151,7 @@ def make_plot(max_hp: int, current_hp: int, out_path: str):
             dpi=96)
 
 
-def parse_config() -> argparse.Namespace:
+def _parse_config() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
             description="""
             The_F6X's Pokemon Overlay Script. will read teamfile from `./team.txt` by default.""")
@@ -175,7 +175,7 @@ def parse_config() -> argparse.Namespace:
 
 
 def main():
-    config = parse_config()
+    config = _parse_config()
     team_path = config.input
     assets_dir = config.assets
     output_dir = config.output
@@ -191,10 +191,10 @@ def main():
             log.warn(f'teamfile not found at {team_path}, trying again...')
             continue
 
-        fresh_state = fetch_raw_team(team_file)
+        fresh_state = _fetch_raw_team(team_file)
         if not fresh_state or fresh_state == saved_state:
             continue
-        team = parse_team(fresh_state)
+        team = _parse_team(fresh_state)
         saved_state = fresh_state
 
         for i in range(6):  # TODO technically we shouldn't assume 6 pokemon all the time
@@ -214,7 +214,7 @@ def main():
                         src=f'{assets_dir}Blank.png',
                         dst=f'{output_dir}health{i + 1}.png')
             else:
-                make_plot(
+                _make_plot(
                         max_hp=team[i][2],
                         current_hp=team[i][1],
                         out_path=f'{output_dir}health{i + 1}.png')
