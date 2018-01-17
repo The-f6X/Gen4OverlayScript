@@ -24,6 +24,7 @@ class _StatusConditionMeta(EnumMeta):
 
 
 class StatusCondition(Enum, metaclass=_StatusConditionMeta):
+    FAINTED = -1
     HEALTHY = 0
     SLEEP = 1
     POISONED = 8
