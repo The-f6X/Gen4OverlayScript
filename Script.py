@@ -75,7 +75,7 @@ def parse_team(raw_team: str) -> list:
                 max_hp = 'A'
                 level = 'N/A'
             elif int(lst3[1]) == 0:
-                status = 'Fainted'
+                status = StatusCondition.FAINTED
             else:
                 status = StatusCondition(int(lst7[1]))
             pokemon = [name, health, max_hp, level, status]
