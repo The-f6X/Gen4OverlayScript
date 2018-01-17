@@ -5,6 +5,7 @@ import sys
 import time
 from enum import Enum, IntEnum, EnumMeta
 from io import TextIOWrapper
+from typing import Any, List, TextIO
 
 import numpy
 from matplotlib import pyplot
@@ -74,11 +75,11 @@ class StatusCondition(Enum, metaclass=_StatusConditionMeta):
 # Script.py
 ################################################################################
 
-def fetch_raw_team(handle: TextIOWrapper) -> str:
+def fetch_raw_team(handle: TextIO) -> str:
     return handle.read().strip()
 
 
-def parse_team(raw_team: str) -> list:
+def parse_team(raw_team: str) -> List[List[Any]]:
     team = []
     parse_state = 0
 
