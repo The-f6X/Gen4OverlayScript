@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import shutil
 import time
 from io import TextIOWrapper
@@ -8,7 +9,6 @@ from matplotlib import pyplot
 from matplotlib.pyplot import clf as clear_figures
 
 X_ARRAY: numpy.ndarray = numpy.arange(1)
-TEAM_PATH = 'team.txt'
 
 
 # TODO replace this with a StatusCondition enum, if possible
@@ -109,10 +109,31 @@ def make_plot(max_hp: int, current_hp: int, out_path: str):
             dpi=96)
 
 
+def parse_my_args_brumther() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+            description="""
+            The_F6X's Pokemon Overlay Script. will read teamfile from `./team.txt` by default.""")
+    parser.add_argument('-i', '--input',
+                        help='path to input teamfile',
+                        default='team.txt')
+    parser.add_argument('-a', '--assets',
+                        help='path to assets directory',
+                        default='assets/')
+    parser.add_argument('-o', '--output',
+                        help='path to output directory',
+                        default='out/')
+    return parser.parse_args()
+
+
 def main():
+    config = parse_my_args_brumther()
+    team_path = config.input
+    assets_dir = config.assets
+    output_dir = config.output
     saved_state = ''
+
     while True:
-        team_file = open(TEAM_PATH)
+        team_file = open(team_path)
         fresh_state = fetch_raw_team(team_file)
         if not fresh_state or fresh_state == saved_state:
             continue
@@ -122,29 +143,30 @@ def main():
         try:
             for i in range(6):  # TODO technically we shouldn't assume 6 pokemon all the time
                 shutil.copyfile(
-                        src=f'C:\\Users\\Daniel\\Pictures\\Twitch\\sugimori\\{team[i][0]}.png',
-                        dst=f'C:\\Users\\Daniel\\Pictures\\Twitch\\NDSRead\\team images\\__party{i + 1}.png')
+                        src=f'{assets_dir}{team[i][0]}.png',
+                        dst=f'{output_dir}__party{i + 1}.png')
 
                 status_text = f'Lvl: {team[i][3]}\n' + \
                               f'HP: {team[i][1]}/{team[i][2]}\n' + \
                               f'Status: {team[i][4]}'
                 
-                with open(f'HP{i + 1}.txt', mode='w') as text_file:
+                with open(f'{output_dir}HP{i + 1}.txt', mode='w') as text_file:
                     text_file.write(status_text)
 
-                if team[i][2] == 'A':
+                if team[i][2] == 'A':  # TODO add these states to an enum or something
                     shutil.copyfile(
-                            src='C:\\Users\\Daniel\\Pictures\\Twitch\\NDSRead\\Blank.png',
-                            dst=f'C:\\Users\\Daniel\\Pictures\\Twitch\\NDSRead\\health{i + 1}.png')
+                            src=f'{assets_dir}Blank.png',
+                            dst=f'{output_dir}health{i + 1}.png')
                 else:
                     make_plot(
                             max_hp=team[i][2],
                             current_hp=team[i][1],
-                            out_path=f'health{i + 1}.png')
+                            out_path=f'{output_dir}health{i + 1}.png')
         except Exception:  # TODO narrow down exception or remove the need for try/except here
             pass
 
         time.sleep(1)
+
 
 if __name__ == '__main__':
     main()
