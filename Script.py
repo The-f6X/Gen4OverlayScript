@@ -156,7 +156,7 @@ def main():
                 if team[i][2] == 'A':  # TODO add these states to an enum or something
                     shutil.copyfile(
                             src=f'{assets_dir}Blank.png',
-                            dst=f'{assets_dir}health{i + 1}.png')
+                            dst=f'{output_dir}health{i + 1}.png')
                 else:
                     make_plot(
                             max_hp=team[i][2],
