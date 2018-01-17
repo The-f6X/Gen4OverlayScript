@@ -84,12 +84,33 @@ class Pokemon:
                  cur_hp: int,
                  max_hp: int,
                  level: int,
+                 egg: bool,
                  status: StatusCondition):
         self.id = pokedex_id
         self.cur_hp = cur_hp
         self.max_hp = max_hp
         self.level = level
-        self.status = status
+        self.is_egg = egg
+
+        if cur_hp == 0:
+            self.status = StatusCondition.FAINTED
+        else:
+            self.status = status
+
+    def inactive(self) -> bool:
+        return self.is_egg or self.id == 0
+
+    def emit(self) -> str:
+        level = 'N/A' if self.inactive() else self.level
+        hp = 'N/A' if self.inactive() else f'{self.cur_hp}/{self.max_hp}'
+        if self.is_egg:
+            status = 'Egg'
+        elif self.id == 0:
+            status = 'Empty'
+        else:
+            status = self.status
+
+        return f'Lvl: {level}\nHP: {hp}\nStatus: {status}'
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, Pokemon):
@@ -110,6 +131,7 @@ class Pokemon:
                        cur_hp=poke_dict['HP'],
                        max_hp=poke_dict['MAXHP'],
                        level=poke_dict['Lvl'],
+                       egg=bool(poke_dict['Egg']),
                        status=StatusCondition(poke_dict['Status']))
 
 
