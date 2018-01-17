@@ -75,6 +75,45 @@ class StatusCondition(Enum, metaclass=_StatusConditionMeta):
 
 
 ################################################################################
+# Pokemon.py
+################################################################################
+
+class Pokemon:
+    def __init__(self,
+                 pokedex_id: int,
+                 cur_hp: int,
+                 max_hp: int,
+                 level: int,
+                 status: StatusCondition):
+        self.id = pokedex_id
+        self.cur_hp = cur_hp
+        self.max_hp = max_hp
+        self.level = level
+        self.status = status
+
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, Pokemon):
+            return self.__dict__ == other.__dict__
+        return False
+
+    def __hash__(self) -> int:
+        return hash(tuple(sorted(self.__dict__.items())))
+
+    @staticmethod
+    def from_tpp_string(string: str) -> 'Pokemon':
+        pairs = [attr.replace(' ', '').split('=') for attr in string.split(',')]
+        poke_dict = dict(map(
+                lambda x: (x[0], int(x[1])),
+                pairs))
+
+        return Pokemon(pokedex_id=int(pairs[0][1]),  # getting by index instead of trying to match PKM1, PKM2, etc
+                       cur_hp=poke_dict['HP'],
+                       max_hp=poke_dict['MAXHP'],
+                       level=poke_dict['Lvl'],
+                       status=StatusCondition(poke_dict['Status']))
+
+
+################################################################################
 # Script.py
 ################################################################################
 
@@ -197,6 +236,7 @@ def main():
 
         fresh_state = _fetch_raw_team(team_file)
         if not fresh_state or fresh_state == saved_state:
+            log.debug('teamfile unchanged since last loop, skipping')
             continue
         team = _parse_team(fresh_state)
         saved_state = fresh_state
