@@ -12,7 +12,6 @@ from matplotlib import pyplot
 from matplotlib.pyplot import clf as clear_figures
 
 PokeNamespace = namedtuple('PokeNamespace', ['input', 'assets', 'output', 'verbosity', 'silent'])
-X_ARRAY: numpy.ndarray = numpy.arange(1)
 
 
 ################################################################################
@@ -83,6 +82,8 @@ class StatusCondition(Enum, metaclass=_StatusConditionMeta):
 ################################################################################
 
 class Pokemon:
+    X_ARRAY: numpy.ndarray = numpy.arange(1)
+
     def __init__(self,
                  pokedex_id: int,
                  cur_hp: int,
@@ -133,6 +134,35 @@ class Pokemon:
     def empty(self) -> bool:
         return self.id == 0
 
+    def render_health(self, out_path: str):
+        clear_figures()
+        health_percent = self.cur_hp / self.max_hp
+
+        if health_percent > 0.5:
+            hp_color = '#4CAF50'  # green
+        elif 0.25 < health_percent <= 0.5:
+            hp_color = '#FFC107'  # yellow
+        else:
+            hp_color = '#F44336'  # red
+
+        pyplot.barh(Pokemon.X_ARRAY, self.cur_hp, color=hp_color)
+
+        # background
+        pyplot.barh(
+                Pokemon.X_ARRAY,
+                self.max_hp - self.cur_hp,
+                left=self.cur_hp,
+                color='#212121')
+
+        pyplot.axis('off')
+
+        pyplot.savefig(
+                out_path,
+                bbox_inches='tight',
+                pad_inches=0,
+                transparent=True,
+                dpi=96)
+
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, Pokemon):
             return self.__dict__ == other.__dict__
@@ -157,38 +187,6 @@ def _parse_team(raw_team: str) -> List[Pokemon]:
     filtered: List[str] = list(filter(bool, lines))
     evens = filtered[::2]
     return list(map(Pokemon.from_tpp_string, evens))
-
-
-def _make_plot(max_hp: int, current_hp: int, out_path: str):
-    clear_figures()
-    health_percent = current_hp / max_hp
-    bar_height = 50 / 96  # TODO make configurable or just less magic
-
-    if health_percent > 0.5:
-        hp_color = '#4CAF50'  # green
-    elif 0.25 < health_percent <= 0.5:
-        hp_color = '#FFC107'  # yellow
-    else:
-        hp_color = '#F44336'  # red
-
-    pyplot.barh(X_ARRAY, current_hp, color=hp_color, height=bar_height)
-
-    # background
-    pyplot.barh(
-            X_ARRAY,
-            max_hp - current_hp,
-            left=current_hp,
-            color='#212121',
-            height=bar_height)
-
-    pyplot.axis('off')
-
-    pyplot.savefig(
-            out_path,
-            bbox_inches='tight',
-            pad_inches=0,
-            transparent=True,
-            dpi=96)
 
 
 def _parse_config() -> PokeNamespace:
@@ -241,22 +239,24 @@ def main():
 
         for i in range(len(team)):
             pokemon = team[i]
-            shutil.copyfile(
-                    src=f'{assets_dir}{pokemon.id}.png',
-                    dst=f'{output_dir}__party{i + 1}.png')
+            party_image = f'{output_dir}__party{i + 1}.png'
+
+            if pokemon.is_egg:
+                shutil.copyfile(src=f'{assets_dir}egg.png',
+                                dst=party_image)
+            else:
+                shutil.copyfile(src=f'{assets_dir}{pokemon.id}.png',
+                                dst=party_image)
 
             with open(f'{output_dir}HP{i + 1}.txt', mode='w') as text_file:
                 text_file.write(pokemon.emit())
 
+            healthbar_path = f'{output_dir}health{i + 1}.png'
             if pokemon.empty():
-                shutil.copyfile(
-                        src=f'{assets_dir}Blank.png',
-                        dst=f'{output_dir}health{i + 1}.png')
+                shutil.copyfile(src=f'{assets_dir}Blank.png',
+                                dst=healthbar_path)
             else:
-                _make_plot(
-                        max_hp=pokemon.max_hp,
-                        current_hp=pokemon.cur_hp,
-                        out_path=f'{output_dir}health{i + 1}.png')
+                pokemon.render_health(healthbar_path)
 
 
 # endregion
