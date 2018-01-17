@@ -28,6 +28,8 @@ class SimpleLogger:
         DEBUG = 2
 
     def __init__(self, log_state: LogState = LogState.INFO):
+        if log_state > max(self.LogState):
+            log_state = max(self.LogState)
         self._log_state = log_state
 
     def debug(self, msg: str):
