@@ -126,6 +126,9 @@ class Pokemon:
 
         return f'Lvl: {level}\nHP: {hp}\nStatus: {status}'
 
+    def empty(self) -> bool:
+        return self.id == 0
+
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, Pokemon):
             return self.__dict__ == other.__dict__
@@ -143,40 +146,14 @@ def _fetch_raw_team(handle: TextIO) -> str:
     return handle.read().strip()
 
 
-def _parse_team(raw_team: str) -> List[List[Any]]:
+def _parse_team(raw_team: str) -> List[Pokemon]:
     team = []
     parse_state = 0
 
     for entry in raw_team.split('\n'):
         line = entry.strip()
         if parse_state == 0:
-            lst = line.split(',')
-            lst2 = lst[0].split(' = ')
-            lst3 = lst[2].split(' = ')
-            lst4 = lst[3].split(' = ')
-            lst6 = lst[4].split(' = ')
-            lst7 = lst[5].split(' = ')
-            lst8 = lst[6].split(' = ')
-            name = int(lst2[1])
-            health = int(lst3[1])
-            max_hp = int(lst4[1])
-            level = int(lst6[1])
-            if int(name) == 0:
-                status = 'Empty'
-                health = 'N'
-                max_hp = 'A'
-                level = 'N/A'
-            elif int(lst8[1]) == 1:
-                name = 'egg'
-                status = 'Egg'
-                health = 'N'
-                max_hp = 'A'
-                level = 'N/A'
-            elif int(lst3[1]) == 0:
-                status = StatusCondition.FAINTED
-            else:
-                status = StatusCondition(int(lst7[1]))
-            pokemon = [name, health, max_hp, level, status]
+            pokemon = Pokemon.from_tpp_string(line)
             team.append(pokemon)
         if parse_state == 2:
             parse_state = -1
@@ -264,25 +241,22 @@ def main():
         saved_state = fresh_state
 
         for i in range(6):  # TODO technically we shouldn't assume 6 pokemon all the time
+            pokemon = team[i]
             shutil.copyfile(
-                    src=f'{assets_dir}{team[i][0]}.png',
+                    src=f'{assets_dir}{pokemon.id}.png',
                     dst=f'{output_dir}__party{i + 1}.png')
 
-            status_text = f'Lvl: {team[i][3]}\n' + \
-                          f'HP: {team[i][1]}/{team[i][2]}\n' + \
-                          f'Status: {team[i][4]}'
-
             with open(f'{output_dir}HP{i + 1}.txt', mode='w') as text_file:
-                text_file.write(status_text)
+                text_file.write(pokemon.emit())
 
-            if team[i][2] == 'A':  # TODO add these states to an enum or something
+            if pokemon.empty():
                 shutil.copyfile(
                         src=f'{assets_dir}Blank.png',
                         dst=f'{output_dir}health{i + 1}.png')
             else:
                 _make_plot(
-                        max_hp=team[i][2],
-                        current_hp=team[i][1],
+                        max_hp=pokemon.max_hp,
+                        current_hp=pokemon.cur_hp,
                         out_path=f'{output_dir}health{i + 1}.png')
 
         time.sleep(1)
