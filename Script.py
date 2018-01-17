@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 import argparse
 import shutil
+import sys
 import time
-from enum import Enum, EnumMeta
+from enum import Enum, IntEnum, EnumMeta
 from io import TextIOWrapper
 
 import numpy
@@ -10,6 +11,38 @@ from matplotlib import pyplot
 from matplotlib.pyplot import clf as clear_figures
 
 X_ARRAY: numpy.ndarray = numpy.arange(1)
+
+
+################################################################################
+# SimpleLogger.py
+################################################################################
+
+class SimpleLogger:
+    class LogState(IntEnum):
+        SILENT = -2
+        ERROR = -1
+        INFO = 0
+        WARN = 1
+        DEBUG = 2
+
+    def __init__(self, log_state: LogState = LogState.INFO):
+        self._log_state = log_state
+
+    def debug(self, msg: str):
+        self._emit(f'[DEBUG] {msg}', self.LogState.DEBUG)
+
+    def error(self, msg: str):
+        self._emit(f'[ERROR] {msg}', self.LogState.ERROR)
+
+    def info(self, msg: str):
+        self._emit(f'[INFO] {msg}', self.LogState.INFO)
+
+    def warn(self, msg: str):
+        self._emit(f'[WARN] {msg}', self.LogState.WARN)
+
+    def _emit(self, msg: str, state: LogState):
+        if state <= self._log_state:
+            print(msg, file=sys.stderr)
 
 
 ################################################################################
@@ -131,6 +164,13 @@ def parse_config() -> argparse.Namespace:
     parser.add_argument('-o', '--output',
                         help='path to output directory',
                         default='out/')
+    parser.add_argument('-v', '--verbosity',
+                        action='count',
+                        default=0,
+                        help='increase output verbosity')
+    parser.add_argument('-S', '--silent',
+                        action='store_true',
+                        help='silences the script - no output at all')
     return parser.parse_args()
 
 
@@ -139,10 +179,18 @@ def main():
     team_path = config.input
     assets_dir = config.assets
     output_dir = config.output
+    log_level = SimpleLogger.LogState.SILENT if config.silent else config.verbosity
+    log = SimpleLogger(log_level)
     saved_state = ''
 
+    log.info('The_F6X overlay loop running!')
     while True:
-        team_file = open(team_path)
+        try:
+            team_file = open(team_path)
+        except FileNotFoundError:
+            log.warn(f'teamfile not found at {team_path}, trying again...')
+            continue
+
         fresh_state = fetch_raw_team(team_file)
         if not fresh_state or fresh_state == saved_state:
             continue
