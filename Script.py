@@ -4,7 +4,6 @@ import shutil
 import sys
 import time
 from enum import Enum, IntEnum, EnumMeta
-from io import TextIOWrapper
 from typing import Any, List, TextIO
 
 import numpy
