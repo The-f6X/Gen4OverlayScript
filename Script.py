@@ -18,6 +18,7 @@ X_ARRAY: numpy.ndarray = numpy.arange(1)
 ################################################################################
 # region SimpleLogger
 ################################################################################
+
 class SimpleLogger:
     class Level(IntEnum):
         SILENT = -2
@@ -152,18 +153,10 @@ def _fetch_raw_team(handle: TextIO) -> str:
 
 
 def _parse_team(raw_team: str) -> List[Pokemon]:
-    team = []
-    parse_state = 0
-
-    for entry in raw_team.split('\n'):
-        line = entry.strip()
-        if parse_state == 0:
-            pokemon = Pokemon.from_tpp_string(line)
-            team.append(pokemon)
-        if parse_state == 2:
-            parse_state = -1
-        parse_state += 1
-    return team
+    lines = raw_team.splitlines()
+    filtered: List[str] = list(filter(bool, lines))
+    evens = filtered[::2]
+    return list(map(Pokemon.from_tpp_string, evens))
 
 
 def _make_plot(max_hp: int, current_hp: int, out_path: str):
