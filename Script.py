@@ -16,9 +16,8 @@ X_ARRAY: numpy.ndarray = numpy.arange(1)
 
 
 ################################################################################
-# SimpleLogger.py
+# region SimpleLogger.py
 ################################################################################
-
 class SimpleLogger:
     class Level(IntEnum):
         SILENT = -2
@@ -49,8 +48,10 @@ class SimpleLogger:
             print(f'{time.strftime("%H:%M:%S")} [{level.name}] {msg}', file=sys.stderr)
 
 
+# endregion
+
 ################################################################################
-# StatusCondition.py
+# region StatusCondition.py
 ################################################################################
 
 class _StatusConditionMeta(EnumMeta):
@@ -74,8 +75,10 @@ class StatusCondition(Enum, metaclass=_StatusConditionMeta):
         return self.name.title()
 
 
+# endregion
+
 ################################################################################
-# Pokemon.py
+# region Pokemon.py
 ################################################################################
 
 class Pokemon:
@@ -138,8 +141,10 @@ class Pokemon:
         return hash(tuple(sorted(self.__dict__.items())))
 
 
+# endregion
+
 ################################################################################
-# Script.py
+# region Script.py
 ################################################################################
 
 def _fetch_raw_team(handle: TextIO) -> str:
@@ -260,6 +265,8 @@ def main():
                         current_hp=pokemon.cur_hp,
                         out_path=f'{output_dir}health{i + 1}.png')
 
+
+# endregion
 
 if __name__ == '__main__':
     main()
