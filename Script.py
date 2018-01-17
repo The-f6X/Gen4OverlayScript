@@ -3,6 +3,7 @@ import argparse
 import shutil
 import sys
 import time
+from collections import namedtuple
 from enum import Enum, IntEnum, EnumMeta
 from typing import Any, List, TextIO
 
@@ -10,6 +11,7 @@ import numpy
 from matplotlib import pyplot
 from matplotlib.pyplot import clf as clear_figures
 
+PokeNamespace = namedtuple('PokeNamespace', ['input', 'assets', 'output', 'verbosity', 'silent'])
 X_ARRAY: numpy.ndarray = numpy.arange(1)
 
 
@@ -151,7 +153,7 @@ def _make_plot(max_hp: int, current_hp: int, out_path: str):
             dpi=96)
 
 
-def _parse_config() -> argparse.Namespace:
+def _parse_config() -> PokeNamespace:
     parser = argparse.ArgumentParser(
             description="""
             The_F6X's Pokemon Overlay Script. will read teamfile from `./team.txt` by default.""")
