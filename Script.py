@@ -16,7 +16,7 @@ X_ARRAY: numpy.ndarray = numpy.arange(1)
 
 
 ################################################################################
-# region SimpleLogger.py
+# region SimpleLogger
 ################################################################################
 class SimpleLogger:
     class Level(IntEnum):
@@ -51,7 +51,7 @@ class SimpleLogger:
 # endregion
 
 ################################################################################
-# region StatusCondition.py
+# region StatusCondition
 ################################################################################
 
 class _StatusConditionMeta(EnumMeta):
@@ -78,7 +78,7 @@ class StatusCondition(Enum, metaclass=_StatusConditionMeta):
 # endregion
 
 ################################################################################
-# region Pokemon.py
+# region Pokemon
 ################################################################################
 
 class Pokemon:
@@ -144,7 +144,7 @@ class Pokemon:
 # endregion
 
 ################################################################################
-# region Script.py
+# region Script
 ################################################################################
 
 def _fetch_raw_team(handle: TextIO) -> str:
