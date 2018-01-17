@@ -233,6 +233,7 @@ def main():
             log.warn(f'teamfile not found at {team_path}, trying again...')
             continue
 
+        time.sleep(1)
         fresh_state = _fetch_raw_team(team_file)
         if not fresh_state or fresh_state == saved_state:
             log.debug('teamfile unchanged since last loop, skipping')
@@ -258,8 +259,6 @@ def main():
                         max_hp=pokemon.max_hp,
                         current_hp=pokemon.cur_hp,
                         out_path=f'{output_dir}health{i + 1}.png')
-
-        time.sleep(1)
 
 
 if __name__ == '__main__':
