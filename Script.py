@@ -134,6 +134,26 @@ class Pokemon:
     def empty(self) -> bool:
         return self.id == 0
 
+    def render(self, index: int, assets_dir: str, output_dir: str):
+        party_image = f'{output_dir}__party{index + 1}.png'
+
+        if self.is_egg:
+            shutil.copyfile(src=f'{assets_dir}egg.png',
+                            dst=party_image)
+        else:
+            shutil.copyfile(src=f'{assets_dir}{self.id}.png',
+                            dst=party_image)
+
+        with open(f'{output_dir}HP{index + 1}.txt', mode='w') as text_file:
+            text_file.write(self.emit())
+
+        healthbar_path = f'{output_dir}health{index + 1}.png'
+        if self.empty():
+            shutil.copyfile(src=f'{assets_dir}Blank.png',
+                            dst=healthbar_path)
+        else:
+            self.render_health(healthbar_path)
+
     def render_health(self, out_path: str):
         clear_figures()
         health_percent = self.cur_hp / self.max_hp
@@ -208,6 +228,8 @@ class Overlay:
         self.output_dir = config.output
         log_level = SimpleLogger.Level.SILENT if config.silent else config.verbosity + 1
         self.log = SimpleLogger(log_level)
+        self._saved_state = ''
+        self._slots: List[Pokemon] = []
 
     @staticmethod
     def _fetch_raw_team(handle: TextIO) -> str:
@@ -221,9 +243,7 @@ class Overlay:
         return list(map(Pokemon.from_tpp_string, evens))
 
     def run_forever(self):
-        saved_state = ''
-
-        self.log.info('The_F6X overlay loop running!')
+        self.log.info('Overlay loop running!')
         while True:
             try:
                 team_file = open(self.team_path)
@@ -233,32 +253,13 @@ class Overlay:
 
             time.sleep(1)
             fresh_state = self._fetch_raw_team(team_file)
-            if not fresh_state or fresh_state == saved_state:
+            if not fresh_state or fresh_state == self._saved_state:
                 self.log.debug('teamfile unchanged since last loop, skipping')
                 continue
             team = self._parse_team(fresh_state)
-            saved_state = fresh_state
+            self._saved_state = fresh_state
 
-            for i in range(len(team)):
-                pokemon = team[i]
-                party_image = f'{self.output_dir}__party{i + 1}.png'
 
-                if pokemon.is_egg:
-                    shutil.copyfile(src=f'{self.assets_dir}egg.png',
-                                    dst=party_image)
-                else:
-                    shutil.copyfile(src=f'{self.assets_dir}{pokemon.id}.png',
-                                    dst=party_image)
-
-                with open(f'{self.output_dir}HP{i + 1}.txt', mode='w') as text_file:
-                    text_file.write(pokemon.emit())
-
-                healthbar_path = f'{self.output_dir}health{i + 1}.png'
-                if pokemon.empty():
-                    shutil.copyfile(src=f'{self.assets_dir}Blank.png',
-                                    dst=healthbar_path)
-                else:
-                    pokemon.render_health(healthbar_path)
 
 
 # endregion
