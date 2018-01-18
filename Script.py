@@ -82,6 +82,7 @@ class Pokemon:
                            status=StatusCondition(poke_dict['Status']))
         except (AttributeError, ValueError):
             logging.critical(f'failed to parse pokemon data, dumping:\n\n {pairs}')
+            raise
 
     def inactive(self) -> bool:
         return self.is_egg or self.id == 0
