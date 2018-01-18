@@ -7,6 +7,9 @@ assets/
 .venv/
 .idea/
 
+# keep example team, but don't track local changes
+saved_team.txt
+
 ### OSX ###
 *.DS_Store
 .AppleDouble
