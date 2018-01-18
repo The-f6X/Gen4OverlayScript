@@ -81,7 +81,7 @@ class Pokemon:
                            egg=bool(poke_dict['Egg']),
                            status=StatusCondition(poke_dict['Status']))
         except (AttributeError, ValueError):
-            logging.critical(f'failed to parse pokemon data, dumping:\n\n {pairs}')
+            logging.critical(f'failed to parse pokemon data, dumping:\n\n{string}\n\n{pairs}')
             raise
 
     def inactive(self) -> bool:
