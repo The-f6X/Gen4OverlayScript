@@ -229,7 +229,7 @@ class Overlay:
         log_level = SimpleLogger.Level.SILENT if config.silent else config.verbosity + 1
         self.log = SimpleLogger(log_level)
         self._saved_state = ''
-        self._slots: List[Pokemon] = []
+        self._slots: List[Pokemon] = [None for _ in range(6)]
 
     @staticmethod
     def _fetch_raw_team(handle: TextIO) -> str:
@@ -259,7 +259,11 @@ class Overlay:
             team = self._parse_team(fresh_state)
             self._saved_state = fresh_state
 
-
+            for i in range(len(self._slots)):
+                if self._slots[i] != team[i]:
+                    self.log.debug(f'slot {i} changed, updating')
+                    self._slots[i] = team[i]
+                    team[i].render(i, self.assets_dir, self.output_dir)
 
 
 # endregion
