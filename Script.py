@@ -253,7 +253,10 @@ class Overlay:
 
             time.sleep(1)
             fresh_state = self._fetch_raw_team(team_file)
-            if not fresh_state or fresh_state == self._saved_state:
+            if not fresh_state:
+                self.log.debug('teamfile empty, skipping update')
+                continue
+            if fresh_state == self._saved_state:
                 self.log.debug('teamfile unchanged since last loop, skipping')
                 continue
             team = self._parse_team(fresh_state)
