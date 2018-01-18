@@ -7,8 +7,8 @@ assets/
 .venv/
 .idea/
 
-# keep example team, but don't track local changes
-saved_team.txt
+# copy example_team.txt to team.txt to make local changes
+team.txt
 
 ### OSX ###
 *.DS_Store
