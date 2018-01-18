@@ -216,7 +216,7 @@ class Overlay:
         lines = raw_team.splitlines()
         filtered: List[str] = list(filter(bool, lines))
         evens = filtered[::2]
-        return list(map(Pokemon.from_tpp_string, evens))
+        return [Pokemon.from_tpp_string(item) for item in evens]
 
     def run_forever(self):
         logging.info('Overlay loop running!')
