@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 import argparse
+import logging
 import shutil
-import sys
 import time
 from collections import namedtuple
-from enum import Enum, IntEnum, EnumMeta
+from enum import Enum, EnumMeta
 from typing import Any, List, TextIO
 
 import numpy
@@ -13,42 +13,6 @@ from matplotlib.pyplot import clf as clear_figures
 
 PokeNamespace = namedtuple('PokeNamespace', ['input', 'assets', 'output', 'verbosity', 'silent'])
 
-
-################################################################################
-# region SimpleLogger
-################################################################################
-
-class SimpleLogger:
-    class Level(IntEnum):
-        SILENT = -2
-        ERROR = -1
-        WARN = 0
-        INFO = 1
-        DEBUG = 2
-
-    def __init__(self, log_level: Level = Level.INFO):
-        if log_level > max(self.Level):
-            log_level = max(self.Level)
-        self._log_state = log_level
-
-    def debug(self, msg: str):
-        self._emit(msg, self.Level.DEBUG)
-
-    def error(self, msg: str):
-        self._emit(msg, self.Level.ERROR)
-
-    def info(self, msg: str):
-        self._emit(msg, self.Level.INFO)
-
-    def warn(self, msg: str):
-        self._emit(msg, self.Level.WARN)
-
-    def _emit(self, msg: str, level: Level):
-        if level <= self._log_state:
-            print(f'{time.strftime("%H:%M:%S")} [{level.name}] {msg}', file=sys.stderr)
-
-
-# endregion
 
 ################################################################################
 # region StatusCondition
@@ -226,8 +190,6 @@ class Overlay:
         self.team_path = config.input
         self.assets_dir = config.assets
         self.output_dir = config.output
-        log_level = SimpleLogger.Level.SILENT if config.silent else config.verbosity + 1
-        self.log = SimpleLogger(log_level)
         self._saved_state = ''
         self._slots: List[Pokemon] = [None for _ in range(6)]
 
@@ -243,28 +205,28 @@ class Overlay:
         return list(map(Pokemon.from_tpp_string, evens))
 
     def run_forever(self):
-        self.log.info('Overlay loop running!')
+        logging.info('Overlay loop running!')
         while True:
             try:
                 team_file = open(self.team_path)
             except FileNotFoundError:
-                self.log.warn(f'teamfile not found at {self.team_path}, trying again...')
+                logging.warning(f'teamfile not found at {self.team_path}, trying again...')
                 continue
 
             time.sleep(1)
             fresh_state = self._fetch_raw_team(team_file)
             if not fresh_state:
-                self.log.debug('teamfile empty, skipping update')
+                logging.debug('teamfile empty, skipping update')
                 continue
             if fresh_state == self._saved_state:
-                self.log.debug('teamfile unchanged since last loop, skipping')
+                logging.debug('teamfile unchanged since last loop, skipping')
                 continue
             team = self._parse_team(fresh_state)
             self._saved_state = fresh_state
 
             for i in range(len(self._slots)):
                 if self._slots[i] != team[i]:
-                    self.log.debug(f'slot {i} changed, updating')
+                    logging.debug(f'slot {i} changed, updating')
                     self._slots[i] = team[i]
                     team[i].render(i, self.assets_dir, self.output_dir)
 
@@ -272,4 +234,9 @@ class Overlay:
 # endregion
 
 if __name__ == '__main__':
-    Overlay(_parse_config()).run_forever()
+    args = _parse_config()
+    log_level = logging.DEBUG if args.verbosity else logging.INFO
+    logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s',
+                        datefmt='%H:%M:%S',
+                        level=log_level)
+    Overlay(args).run_forever()
