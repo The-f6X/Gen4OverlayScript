@@ -5,7 +5,7 @@ import shutil
 import time
 from collections import namedtuple
 from enum import Enum, EnumMeta
-from typing import Any, List, TextIO
+from typing import Any, Dict, List, TextIO
 
 import numpy
 from matplotlib import pyplot
@@ -19,10 +19,17 @@ PokeNamespace = namedtuple('PokeNamespace', ['input', 'assets', 'output', 'verbo
 ################################################################################
 
 class _StatusConditionMeta(EnumMeta):
+    SLEEP_RANGE = range(1, 8)
+
     def __call__(cls, value, *args, **kwargs):
-        if value in range(1, 8):  # handles sleep state edge case
-            value = 1             # normalizes multiple values for sleep to the actual value
+        if value in cls.SLEEP_RANGE:  # handles sleep state edge case
+            value = 1                 # normalizes multiple values for sleep to the enum value
         return super().__call__(value, *args, **kwargs)
+
+    def __contains__(self, item):
+        if isinstance(item, int):
+            return item in self.SLEEP_RANGE or item in {entry.value for entry in StatusCondition}
+        return super(_StatusConditionMeta, self).__contains__(item)
 
 
 class StatusCondition(Enum, metaclass=_StatusConditionMeta):
@@ -70,18 +77,21 @@ class Pokemon:
     def from_tpp_string(string: str) -> 'Pokemon':
         pairs = [attr.replace(' ', '').split('=') for attr in string.split(',')]
         try:
-            poke_dict = dict(map(
-                    lambda x: (x[0], int(x[1])),
-                    pairs))
+            poke_dict: Dict[str, int] = {pair[0]: int(pair[1]) for pair in pairs}
+
+            status = poke_dict['Status']
+            if status not in StatusCondition:
+                logging.warning(f'emulator yielded out of range value for status: {status}')
+                status = 0
 
             return Pokemon(pokedex_id=int(pairs[0][1]),  # getting by index instead of trying to match PKM1, PKM2, etc
                            cur_hp=poke_dict['HP'],
                            max_hp=poke_dict['MAXHP'],
                            level=poke_dict['Lvl'],
                            egg=bool(poke_dict['Egg']),
-                           status=StatusCondition(poke_dict['Status']))
+                           status=StatusCondition(status))
         except (AttributeError, ValueError):
-            logging.critical(f'failed to parse pokemon data, dumping:\n\n{string}\n\n{pairs}')
+            logging.critical(f'failed to parse pokemon data, dumping:\n\n{string}\n\n{pairs}\n')
             raise
 
     def inactive(self) -> bool:
