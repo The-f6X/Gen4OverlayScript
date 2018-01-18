@@ -195,7 +195,7 @@ def _parse_config() -> PokeNamespace:
                         help='increase output verbosity')
     parser.add_argument('-S', '--silent',
                         action='store_true',
-                        help='silences the script - no output at all')
+                        help='silences the script - no output except for criticals and stack traces')
     return parser.parse_args()
 
 
