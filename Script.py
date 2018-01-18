@@ -216,11 +216,11 @@ class Overlay:
                 logging.warning(f'teamfile not found at {self.team_path}, trying again...')
                 continue
 
-            time.sleep(1)
             fresh_state = self._fetch_raw_team(team_file)
             if not fresh_state:
                 logging.debug('teamfile empty, skipping update')
                 continue
+            time.sleep(1)
             if fresh_state == self._saved_state:
                 logging.debug('teamfile unchanged since last loop, skipping')
                 continue
