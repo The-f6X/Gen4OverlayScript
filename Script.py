@@ -94,24 +94,6 @@ class Pokemon:
             logging.critical(f'failed to parse pokemon data, dumping:\n\n{string}\n\n{pairs}\n')
             raise
 
-    def inactive(self) -> bool:
-        return self.is_egg or self.id == 0
-
-    def emit(self) -> str:
-        level = 'N/A' if self.inactive() else self.level
-        hp = 'N/A' if self.inactive() else f'{self.cur_hp}/{self.max_hp}'
-        if self.is_egg:
-            status = 'Egg'
-        elif self.id == 0:
-            status = 'Empty'
-        else:
-            status = self.status
-
-        return f'Lvl: {level}\nHP: {hp}\nStatus: {status}'
-
-    def empty(self) -> bool:
-        return self.id == 0
-
     def render(self, index: int, assets_dir: str, output_dir: str):
         party_image = f'{output_dir}__party{index + 1}.png'
 
@@ -123,16 +105,34 @@ class Pokemon:
                             dst=party_image)
 
         with open(f'{output_dir}HP{index + 1}.txt', mode='w') as text_file:
-            text_file.write(self.emit())
+            text_file.write(self._emit())
 
         healthbar_path = f'{output_dir}health{index + 1}.png'
-        if self.empty():
+        if self._empty():
             shutil.copyfile(src=f'{assets_dir}Blank.png',
                             dst=healthbar_path)
         else:
-            self.render_health(healthbar_path)
+            self._render_health(healthbar_path)
 
-    def render_health(self, out_path: str):
+    def _emit(self) -> str:
+        level = 'N/A' if self._inactive() else self.level
+        hp = 'N/A' if self._inactive() else f'{self.cur_hp}/{self.max_hp}'
+        if self.is_egg:
+            status = 'Egg'
+        elif self.id == 0:
+            status = 'Empty'
+        else:
+            status = self.status
+
+        return f'Lvl: {level}\nHP: {hp}\nStatus: {status}'
+
+    def _empty(self) -> bool:
+        return self.id == 0
+
+    def _inactive(self) -> bool:
+        return self.is_egg or self.id == 0
+
+    def _render_health(self, out_path: str):
         clear_figures()
         health_percent = self.cur_hp / self.max_hp
 
@@ -201,30 +201,19 @@ def _parse_config() -> PokeNamespace:
 
 class Overlay:
     def __init__(self, config: PokeNamespace):
-        self.team_path = config.input
-        self.assets_dir = config.assets
-        self.output_dir = config.output
+        self._assets_dir = config.assets
+        self._output_dir = config.output
         self._saved_state = ''
-        self._slots: List[Pokemon] = [None for _ in range(6)]
-
-    @staticmethod
-    def _fetch_raw_team(handle: TextIO) -> str:
-        return handle.read().strip()
-
-    @staticmethod
-    def _parse_team(raw_team: str) -> List[Pokemon]:
-        lines = raw_team.splitlines()
-        filtered: List[str] = list(filter(bool, lines))
-        evens = filtered[::2]
-        return [Pokemon.from_tpp_string(item) for item in evens]
+        self._slots: List[Pokemon] = [None for _ in range(6)]  # technically List<Pokemon?>
+        self._team_path = config.input
 
     def run_forever(self):
         logging.info('Overlay loop running!')
         while True:
             try:
-                team_file = open(self.team_path)
+                team_file = open(self._team_path)
             except FileNotFoundError:
-                logging.warning(f'teamfile not found at {self.team_path}, trying again...')
+                logging.warning(f'teamfile not found at {self._team_path}, trying again...')
                 continue
 
             fresh_state = self._fetch_raw_team(team_file)
@@ -242,7 +231,18 @@ class Overlay:
                 if self._slots[i] != team[i]:
                     logging.info(f'slot {i} changed, updating')
                     self._slots[i] = team[i]
-                    team[i].render(i, self.assets_dir, self.output_dir)
+                    team[i].render(i, self._assets_dir, self._output_dir)
+
+    @staticmethod
+    def _fetch_raw_team(handle: TextIO) -> str:
+        return handle.read().strip()
+
+    @staticmethod
+    def _parse_team(raw_team: str) -> List[Pokemon]:
+        lines = raw_team.splitlines()
+        filtered: List[str] = list(filter(bool, lines))
+        evens = filtered[::2]
+        return [Pokemon.from_tpp_string(item) for item in evens]
 
 
 # endregion
