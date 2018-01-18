@@ -226,7 +226,7 @@ class Overlay:
 
             for i in range(len(self._slots)):
                 if self._slots[i] != team[i]:
-                    logging.debug(f'slot {i} changed, updating')
+                    logging.info(f'slot {i} changed, updating')
                     self._slots[i] = team[i]
                     team[i].render(i, self.assets_dir, self.output_dir)
 
@@ -234,9 +234,14 @@ class Overlay:
 # endregion
 
 if __name__ == '__main__':
-    args = _parse_config()
-    log_level = logging.DEBUG if args.verbosity else logging.INFO
-    logging.basicConfig(format='%(asctime)s [%(levelname)s]: %(message)s',
+    params = _parse_config()
+    if params.silent:
+        log_level = logging.CRITICAL
+    elif params.verbosity:
+        log_level = logging.DEBUG
+    else:
+        log_level = logging.INFO
+    logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s',
                         datefmt='%H:%M:%S',
                         level=log_level)
-    Overlay(args).run_forever()
+    Overlay(params).run_forever()
