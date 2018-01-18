@@ -69,16 +69,19 @@ class Pokemon:
     @staticmethod
     def from_tpp_string(string: str) -> 'Pokemon':
         pairs = [attr.replace(' ', '').split('=') for attr in string.split(',')]
-        poke_dict = dict(map(
-                lambda x: (x[0], int(x[1])),
-                pairs))
+        try:
+            poke_dict = dict(map(
+                    lambda x: (x[0], int(x[1])),
+                    pairs))
 
-        return Pokemon(pokedex_id=int(pairs[0][1]),  # getting by index instead of trying to match PKM1, PKM2, etc
-                       cur_hp=poke_dict['HP'],
-                       max_hp=poke_dict['MAXHP'],
-                       level=poke_dict['Lvl'],
-                       egg=bool(poke_dict['Egg']),
-                       status=StatusCondition(poke_dict['Status']))
+            return Pokemon(pokedex_id=int(pairs[0][1]),  # getting by index instead of trying to match PKM1, PKM2, etc
+                           cur_hp=poke_dict['HP'],
+                           max_hp=poke_dict['MAXHP'],
+                           level=poke_dict['Lvl'],
+                           egg=bool(poke_dict['Egg']),
+                           status=StatusCondition(poke_dict['Status']))
+        except (AttributeError, ValueError):
+            logging.critical(f'failed to parse pokemon data, dumping:\n\n {pairs}')
 
     def inactive(self) -> bool:
         return self.is_egg or self.id == 0
