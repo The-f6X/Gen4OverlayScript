@@ -7,7 +7,6 @@ from collections import namedtuple
 from enum import Enum, EnumMeta
 from typing import Any, Dict, List, TextIO
 
-import numpy
 from matplotlib import pyplot
 from matplotlib.pyplot import clf as clear_figures
 
@@ -53,7 +52,10 @@ class StatusCondition(Enum, metaclass=_StatusConditionMeta):
 ################################################################################
 
 class Pokemon:
-    X_ARRAY: numpy.ndarray = numpy.arange(1)
+    HP_BACKGROUND = '#212121'
+    HP_GREEN = '#4CAF50'
+    HP_YELLOW = '#FFC107'
+    HP_RED = '#F44336'
 
     def __init__(self,
                  pokedex_id: int,
@@ -134,32 +136,32 @@ class Pokemon:
 
     def _render_health(self, out_path: str):
         clear_figures()
+        total_width = 10
         health_percent = self.cur_hp / self.max_hp
 
         if health_percent > 0.5:
-            hp_color = '#4CAF50'  # green
+            hp_color = self.HP_GREEN
         elif 0.25 < health_percent <= 0.5:
-            hp_color = '#FFC107'  # yellow
+            hp_color = self.HP_YELLOW
         else:
-            hp_color = '#F44336'  # red
+            hp_color = self.HP_RED
 
-        pyplot.barh(Pokemon.X_ARRAY, self.cur_hp, color=hp_color)
+        pyplot.barh(y=0,
+                    width=total_width,
+                    color=self.HP_BACKGROUND)
 
-        # background
-        pyplot.barh(
-                Pokemon.X_ARRAY,
-                self.max_hp - self.cur_hp,
-                left=self.cur_hp,
-                color='#212121')
+        fill_width = health_percent * total_width
+        pyplot.barh(y=0,
+                    width=fill_width,
+                    color=hp_color)
 
         pyplot.axis('off')
 
-        pyplot.savefig(
-                out_path,
-                bbox_inches='tight',
-                pad_inches=0,
-                transparent=True,
-                dpi=96)
+        pyplot.savefig(out_path,
+                       bbox_inches='tight',
+                       pad_inches=0,
+                       transparent=True,
+                       dpi=96)
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, Pokemon):
