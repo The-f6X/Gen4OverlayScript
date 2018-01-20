@@ -83,7 +83,7 @@ class Pokemon:
 
             status = poke_dict['Status']
             if status not in StatusCondition:
-                logging.warning(f'emulator yielded out of range value for status: {status}')
+                logging.warning(f'emulator yielded out of range status value [{status}] for slot {pairs[0][0]}')
                 status = 0
 
             return Pokemon(pokedex_id=int(pairs[0][1]),  # getting by index instead of trying to match PKM1, PKM2, etc
@@ -97,20 +97,20 @@ class Pokemon:
             raise
 
     def render(self, index: int, assets_dir: str, output_dir: str):
-        party_image = f'{output_dir}__party{index + 1}.png'
-
         if self.is_egg:
-            shutil.copyfile(src=f'{assets_dir}egg.png',
-                            dst=party_image)
+            pkmn_img = f'{assets_dir}egg.png'
         else:
-            shutil.copyfile(src=f'{assets_dir}{self.id}.png',
-                            dst=party_image)
+            pkmn_img = f'{assets_dir}{self.id}.png'
+        party_path = f'{output_dir}__party{index + 1}.png'
+
+        shutil.copyfile(src=pkmn_img,
+                        dst=party_path)
 
         with open(f'{output_dir}HP{index + 1}.txt', mode='w') as text_file:
             text_file.write(self._emit())
 
         healthbar_path = f'{output_dir}health{index + 1}.png'
-        if self._empty():
+        if self._inactive():
             shutil.copyfile(src=f'{assets_dir}Blank.png',
                             dst=healthbar_path)
         else:
@@ -127,9 +127,6 @@ class Pokemon:
             status = self.status
 
         return f'Lvl: {level}\nHP: {hp}\nStatus: {status}'
-
-    def _empty(self) -> bool:
-        return self.id == 0
 
     def _inactive(self) -> bool:
         return self.is_egg or self.id == 0
