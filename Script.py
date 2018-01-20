@@ -229,11 +229,11 @@ class Overlay:
             team = self._parse_team(fresh_state)
             self._saved_state = fresh_state
 
-            for i in range(len(self._slots)):
-                if self._slots[i] != team[i]:
-                    logging.info(f'slot {i} changed, updating')
-                    self._slots[i] = team[i]
-                    team[i].render(i, self._assets_dir, self._output_dir)
+            for index in range(len(self._slots)):
+                if self._slots[index] != team[index]:
+                    logging.info(f'slot {index} changed, updating')
+                    self._slots[index] = team[index]
+                    team[index].render(index, self._assets_dir, self._output_dir)
 
     @staticmethod
     def _fetch_raw_team(handle: TextIO) -> str:
@@ -260,4 +260,7 @@ if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s',
                         datefmt='%H:%M:%S',
                         level=log_level)
-    Overlay(params).run_forever()
+    try:
+        Overlay(params).run_forever()
+    except KeyboardInterrupt:
+        logging.info('Exiting...')
