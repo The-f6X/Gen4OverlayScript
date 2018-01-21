@@ -94,4 +94,6 @@ You can [download]() the latest version of the script for Windows since DeSmuME 
 
 > Twitch [The_f6X](https://www.twitch.tv/the_f6x) &nbsp;&middot;&nbsp;
 > GitHub [@The-f6X](https://github.com/The-f6X) &nbsp;&middot;&nbsp;
-> Twitter [@The_f6X](https://twitter.com/The_f6X)
+> Twitter [@The_f6X](https://twitter.com/The_f6X) &nbsp;&middot;&nbsp;
+> GitHub [@shawnrc](https://github.com/shawnrc) &nbsp;&middot;&nbsp;
+> Twitter [@shawnrc](https://twitter.com/shawn_rc)
