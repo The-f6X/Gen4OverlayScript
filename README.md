@@ -13,8 +13,6 @@
   <a href="#how-to-use">How To Use</a> •
   <a href="#download">Download</a> •
   <a href="#credits">Credits</a> •
-  <a href="#related">Related</a> •
-  <a href="#license">License</a>
 </p>
 
 ![screenshot](https://raw.githubusercontent.com/The-f6X/Gen4OverlayScript/master/img/Demo.gif)
@@ -87,18 +85,6 @@ You can [download]() the latest version of the script for Windows since DeSmuME 
  * [KazoWar](https://projectpokemon.org/home/forums/topic/30518-4th-and-5th-gen-misc-info-reading-scripts/) for the original Lua script.
  * [MatPlotLib](https://matplotlib.org/index.html) for the health bar code. 
  * [Markdownify](https://github.com/amitmerchant1990/electron-markdownify) for readme formatting.
-
-## Related
-
-
-
-## You may also like...
-
-
-
-## License
-
-GNU GPLv3
 
 ---
 
