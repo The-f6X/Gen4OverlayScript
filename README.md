@@ -80,7 +80,7 @@ And you're done! Unfortunately it is a lot of images/text to setup. But when you
 ## Download
 
 
-You can [download]() the latest version of the script for Windows since Desmume doesn't support Lua scripting on other platforms.
+You can [download]() the latest version of the script for Windows since DeSmuME doesn't support Lua scripting on other platforms.
 
 ## Credits
 
