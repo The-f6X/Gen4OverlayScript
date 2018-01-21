@@ -52,7 +52,7 @@ The assets folder needs to be populated with images of all pokemon and named wit
 ![screenshot](https://raw.githubusercontent.com/The-f6X/Gen4OverlayScript/master/img/Assets.PNG)
 * Note: You will also need a file for an empty slot (0.png) and for an egg (egg.png)
 
-In desmume, there is the option to add a lua script under tools -> Lua Scripting: 
+In DeSmuMe, there is the option to add a lua script under tools -> Lua Scripting: 
 
 ![screenshot](https://raw.githubusercontent.com/The-f6X/Gen4OverlayScript/master/img/DeSmuMe.PNG)
 
