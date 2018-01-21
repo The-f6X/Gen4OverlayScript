@@ -20,7 +20,7 @@
   <a href="#license">License</a>
 </p>
 
-<div class='gfyitem' data-id=BaggyRegalAfricanbushviper></div>
+![screenshot](https://raw.githubusercontent.com/The-f6X/Gen4OverlayScript/master/img/Demo.gif)
 
 ## Key Features
 
