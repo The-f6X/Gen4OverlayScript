@@ -39,7 +39,7 @@
 For this script to work, you need to have the following: 
  * [Python version 3.X](https://www.python.org/downloads/)
  * [Open Broadcaster Software](https://obsproject.com/)
- * [DeSmuMe](http://desmume.org/)
+ * [DeSmuME](http://desmume.org/)
  * A generation 4 or 5 Pokémon rom
 
 
@@ -52,11 +52,11 @@ The assets folder needs to be populated with images of all pokemon and named wit
 ![screenshot](https://raw.githubusercontent.com/The-f6X/Gen4OverlayScript/master/img/Assets.PNG)
 * Note: You will also need a file for an empty slot (0.png) and for an egg (egg.png)
 
-In desmume, there is the option to add a lua script under tools -> Lua Scripting: 
+In DeSmuME, there is the option to add a lua script under tools -> Lua Scripting: 
 
-![screenshot](https://raw.githubusercontent.com/The-f6X/Gen4OverlayScript/master/img/DeSmuMe.PNG)
+![screenshot](https://raw.githubusercontent.com/The-f6X/Gen4OverlayScript/master/img/DeSmuME.PNG)
 
-After the script is running in DeSmuMe, you then need to run the python script.
+After the script is running in DeSmuME, you then need to run the python script.
 
 ```
 cd <path to folder>
