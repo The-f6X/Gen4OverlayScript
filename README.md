@@ -19,7 +19,7 @@
   <a href="LICENSE.txt">License</a>
 </p>
 
-![Demo](https://i.imgur.com/fXD8ltx.gifv)
+![Demo](https://i.imgur.com/5qjwPwe.gifv)
 
 ## Key Features
 
