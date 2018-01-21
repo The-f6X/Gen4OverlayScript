@@ -53,8 +53,7 @@ For this script to work, you need to have the following:
 
 
 After downloading the most recent version of the script, you should have a folder like this: 
-<br></br>
-<img src="https://raw.githubusercontent.com/The-f6X/Gen4OverlayScript/master/img/Folder.PNG", align="middle"></img>
+![screenshot](https://raw.githubusercontent.com/The-f6X/Gen4OverlayScript/master/img/Folder.PNG)
 <br></br>
 <br></br>
 The assets folder needs to be populated with images of all pokemon and named with their national dex number:
