@@ -19,7 +19,7 @@
   <a href="LICENSE.txt">License</a>
 </p>
 
-![Demo](https://i.imgur.com/5qjwPwe.gif)
+![Demo](https://github.com/The-f6X/Gen4OverlayScript/blob/master/img/Demo.gif)
 
 ## Key Features
 
