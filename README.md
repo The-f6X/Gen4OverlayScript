@@ -37,10 +37,10 @@
 ## How To Use
 
 For this script to work, you need to have the following: 
- * Python version 3.X
+ * [Python version 3.X](https://www.python.org/downloads/)
+ * [Open Broadcaster Software](https://obsproject.com/)
  * [DeSmuMe](http://desmume.org/)
  * A generation 4 or 5 Pokémon rom
- * [Open Broadcaster Software](https://obsproject.com/)
 
 
 
