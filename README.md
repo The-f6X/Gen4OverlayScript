@@ -20,12 +20,7 @@
   <a href="#license">License</a>
 </p>
 
-<p align="center">
-<video poster="https://raw.githubusercontent.com/The-f6X/Gen4OverlayScript/master/img/Poster.jpg" width="640" height="480" controls preload> 
-    <source src="https://github.com/The-f6X/Gen4OverlayScript/blob/master/img/Demo.mp4?raw=true" media="only screen and (min-device-width: 568px)"></source> 
-    <source src="https://github.com/The-f6X/Gen4OverlayScript/blob/master/img/Demo_mobile.mp4?raw=true" media="only screen and (max-device-width: 568px)"></source>
-</video>
-</p>
+<div class='gfyitem' data-id=BaggyRegalAfricanbushviper></div>
 
 ## Key Features
 
