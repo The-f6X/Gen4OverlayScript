@@ -98,7 +98,7 @@ You can [download]() the latest version of the script for Windows since DeSmuME 
 
 ## License
 
-
+GNU GPLv3
 
 ---
 
