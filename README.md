@@ -83,12 +83,9 @@ And you're done! Unfortunately it is a lot of images/text to setup. But when you
 You can [download]() the latest version of the script for Windows since DeSmuME doesn't support Lua scripting on other platforms.
 
 ## Credits
-
-This software uses code from several open source packages.
-
- * [MatPlotLib](https://matplotlib.org/index.html) for the health bar code. 
- * [KazoWar](https://projectpokemon.org/home/forums/topic/30518-4th-and-5th-gen-misc-info-reading-scripts/) for the original Lua script.
  * [Shawn](https://github.com/shawnrc) for taking interest in the projct and developing the hell out of it. 
+ * [KazoWar](https://projectpokemon.org/home/forums/topic/30518-4th-and-5th-gen-misc-info-reading-scripts/) for the original Lua script.
+ * [MatPlotLib](https://matplotlib.org/index.html) for the health bar code. 
  * [Markdownify](https://github.com/amitmerchant1990/electron-markdownify) for readme formatting.
 
 ## Related
