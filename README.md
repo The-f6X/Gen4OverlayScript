@@ -19,7 +19,7 @@
   <a href="LICENSE.txt">License</a>
 </p>
 
-![screenshot](https://raw.githubusercontent.com/The-f6X/Gen4OverlayScript/master/img/Demo.gif)
+![screenshot](https://drive.google.com/file/d/1UBMuW06ol6c5jbTOuEnsf6OulcHg2k9Z/view?usp=sharing)
 
 ## Key Features
 
@@ -47,16 +47,16 @@ For this script to work, you need to have the following:
 
 
 After downloading the most recent version of the script, you should have a folder like this: 
-![screenshot](https://raw.githubusercontent.com/The-f6X/Gen4OverlayScript/master/img/Folder.PNG)
+![screenshot](https://drive.google.com/open?id=1iqb7M7cSafkqg04XfOGx_IDnCFcnf2el)
 
 The assets folder needs to be populated with images of all pokemon and named with their national dex number:
 
-![screenshot](https://raw.githubusercontent.com/The-f6X/Gen4OverlayScript/master/img/Assets.PNG)
+![screenshot](https://drive.google.com/open?id=1Ek23ZW8YH7YMxbtn9lfwbDTd_mGi1MIU)
 * Note: You will also need a file for an empty slot (0.png) and for an egg (egg.png)
 
 In DeSmuME, there is the option to add a lua script under tools -> Lua Scripting: 
 
-![screenshot](https://github.com/The-f6X/Gen4OverlayScript/blob/master/img/DeSmuMe.PNG)
+![screenshot](https://drive.google.com/open?id=1GfwjI_ML1CGepq7QPrJUqnlOO9OMeuPB)
 
 After the script is running in DeSmuME, you then need to run the python script.
 
@@ -67,15 +67,15 @@ Python Script.py
 
 Then over in OBS, you need to add image sources for the the team members and their health bars making sure to point to the files located in the /out/ folder. 
 
-![screenshot](https://raw.githubusercontent.com/The-f6X/Gen4OverlayScript/master/img/OBSImages.PNG)
+![screenshot](https://drive.google.com/open?id=11qfuDJdN2Fg1_6s-noQjwO91Ai8cjZ2c)
 
 Then add the text for each team member making sure to point to the text files in the /out/ folder. 
 
-![screenshot](https://raw.githubusercontent.com/The-f6X/Gen4OverlayScript/master/img/OBSText.PNG)
+![screenshot](https://drive.google.com/open?id=1j0i8CXMg6I3rNeLdyfp5rba3skPpQT86)
 
 And you're done! Unfortunately it is a lot of images/text to setup. But when you're done it should look something like this: 
 
-![screenshot](https://raw.githubusercontent.com/The-f6X/Gen4OverlayScript/master/img/OBSSources.PNG)
+![screenshot](https://drive.google.com/open?id=1BQCsE3loQm-qk6ocN9t15j1ZWAk_KGkt)
 
 
 
