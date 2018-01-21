@@ -54,7 +54,7 @@ The assets folder needs to be populated with images of all pokemon and named wit
 
 In DeSmuME, there is the option to add a lua script under tools -> Lua Scripting: 
 
-![screenshot](https://raw.githubusercontent.com/The-f6X/Gen4OverlayScript/master/img/DeSmuME.PNG)
+![screenshot](https://github.com/The-f6X/Gen4OverlayScript/blob/master/img/DeSmuMe.PNG)
 
 After the script is running in DeSmuME, you then need to run the python script.
 
