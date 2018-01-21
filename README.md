@@ -1,8 +1,5 @@
 
 <h1 align="center">
-  <br>
-  <a href="https://github.com/The-f6X/Gen4OverlayScript"><img src="https://raw.githubusercontent.com/The-f6X/Gen4OverlayScript/3067492b6ba8b810ccdd4e0239239e2e5dd87159/img/The_f6X.png" alt="The_f6X" width="200"></a>
-  <br>
   Pokémon gen 4 and 5 overlay script
   <br>
 </h1>
