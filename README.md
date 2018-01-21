@@ -1,3 +1,6 @@
+[![forthebadge](http://forthebadge.com/images/badges/made-with-python.svg)](http://forthebadge.com)[![forthebadge](http://forthebadge.com/images/badges/powered-by-electricity.svg)](http://forthebadge.com)
+
+[![Twitch](https://img.shields.io/badge/as%20seen%20on-twitch-6441A4.svg?style=for-the-badge)](http://www.twitch.tv/the_f6x)[![GitHub license](https://img.shields.io/github/license/The-f6X/Gen4OverlayScript.svg?style=for-the-badge)](https://github.com/The-f6X/Gen4OverlayScript/blob/master/LICENSE.txt)[![Waffle.io](https://img.shields.io/waffle/label/The-f6x/Gen4OverlayScript/in%20progress.svg?style=for-the-badge)](https://waffle.io/The-f6X/Gen4OverlayScript)
 
 <h1 align="center">
   Pokémon gen 4 and 5 overlay script
@@ -13,6 +16,7 @@
   <a href="#how-to-use">How To Use</a> •
   <a href="#download">Download</a> •
   <a href="#credits">Credits</a> •
+  <a href="LICENSE.txt">License</a>
 </p>
 
 ![screenshot](https://raw.githubusercontent.com/The-f6X/Gen4OverlayScript/master/img/Demo.gif)
@@ -28,8 +32,8 @@
 * Current level
 * Artwork for each team member
   - Supports empty slots and eggs
-* Nickname
-  - Comming soon(tm)
+* Nicknames
+  - Coming Soon™
 
 
 ## How To Use
