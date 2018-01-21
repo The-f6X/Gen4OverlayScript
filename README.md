@@ -18,8 +18,7 @@
   <a href="#credits">Credits</a> •
   <a href="LICENSE.txt">License</a>
 </p>
-
-![screenshot](https://i.imgur.com/fXD8ltx.gif)
+[[https://i.imgur.com/fXD8ltx.gifv]]
 
 ## Key Features
 
