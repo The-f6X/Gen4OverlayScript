@@ -19,7 +19,7 @@
   <a href="LICENSE.txt">License</a>
 </p>
 
-<blockquote class="imgur-embed-pub" lang="en" data-id="fXD8ltx"><a href="//imgur.com/fXD8ltx"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+![screenshot](https://i.imgur.com/fXD8ltx.gif)
 
 ## Key Features
 
