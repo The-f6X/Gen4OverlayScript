@@ -97,10 +97,8 @@ class Pokemon:
             raise
 
     def render(self, index: int, assets_dir: str, output_dir: str):
-        if self.is_egg:
-            pkmn_img = f'{assets_dir}egg.png'
-        else:
-            pkmn_img = f'{assets_dir}{self.id}.png'
+        pokemon_id = 'egg' if self.is_egg else self.id
+        pkmn_img = f'{assets_dir}{pokemon_id}.png'
         party_path = f'{output_dir}__party{index + 1}.png'
 
         shutil.copyfile(src=pkmn_img,
