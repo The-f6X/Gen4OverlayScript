@@ -69,6 +69,7 @@ class Pokemon:
         self.max_hp = max_hp
         self.level = level
         self.is_egg = egg
+        self.inactive = self.is_egg or cur_hp == 0
 
         if cur_hp == 0:
             self.status = StatusCondition.FAINTED
@@ -108,15 +109,15 @@ class Pokemon:
             text_file.write(self._emit())
 
         healthbar_path = f'{output_dir}health{index + 1}.png'
-        if self._inactive():
+        if self.inactive:
             shutil.copyfile(src=f'{assets_dir}Blank.png',
                             dst=healthbar_path)
         else:
             self._render_health(healthbar_path)
 
     def _emit(self) -> str:
-        level = 'N/A' if self._inactive() else self.level
-        hp = 'N/A' if self._inactive() else f'{self.cur_hp}/{self.max_hp}'
+        level = 'N/A' if self.inactive else self.level
+        hp = 'N/A' if self.inactive else f'{self.cur_hp}/{self.max_hp}'
         if self.is_egg:
             status = 'Egg'
         elif self.id == 0:
@@ -125,9 +126,6 @@ class Pokemon:
             status = self.status
 
         return f'Lvl: {level}\nHP: {hp}\nStatus: {status}'
-
-    def _inactive(self) -> bool:
-        return self.is_egg or self.id == 0
 
     def _render_health(self, out_path: str):
         clear_figures()
