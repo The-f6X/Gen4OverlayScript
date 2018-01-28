@@ -927,7 +927,7 @@ class Pokemon:
 
         name = '--' if self.inactive else POKEMON_LIST[self.id-1].upper()
         level = 'N/A' if self.inactive else f'LVL.{self.level:{"03"}}'
-        top = f'{name:{"<14"}}{level:{">9"}}'  # TODO get rid of numeric literals
+        top = f'{name:{"<14"}}{level:{">7"}}'  # TODO get rid of numeric literals
 
         if self.is_egg:
             status = 'Egg'
@@ -935,10 +935,10 @@ class Pokemon:
             status = 'Empty'
         else:
             status = str(self.status)
-        middle = f'STATUS{status.upper():{">17"}}'
+        middle = f'STATUS{status.upper():{">15"}}'
 
         health = 'N/A' if self.inactive else f'{self.cur_hp}/{self.max_hp}'
-        bottom = f'{health:{">23"}}'
+        bottom = f'{health:{">21"}}'
         return template.format(top, middle, bottom)
 
     def _render_health(self, out_path: str):
