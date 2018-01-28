@@ -924,8 +924,10 @@ class Pokemon:
 
     def _emit(self) -> str:
         template = '{}\n{}\n{}'
+
+        name = '--' if self.inactive else POKEMON_LIST[self.id-1].upper()
         level = 'N/A' if self.inactive else f'LVL.{self.level:{"03"}}'
-        top = f'{POKEMON_LIST[self.id-1].upper():{"<14"}}{level:{">9"}}'  # TODO get rid of numeric literals
+        top = f'{name:{"<14"}}{level:{">9"}}'  # TODO get rid of numeric literals
 
         if self.is_egg:
             status = 'Egg'
