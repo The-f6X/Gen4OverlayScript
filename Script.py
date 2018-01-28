@@ -856,10 +856,10 @@ class StatusCondition(Enum, metaclass=_StatusConditionMeta):
 ################################################################################
 
 class Pokemon:
-    HP_BACKGROUND = '#212121'
-    HP_GREEN = '#4CAF50'
-    HP_YELLOW = '#FFC107'
-    HP_RED = '#F44336'
+    HP_BACKGROUND = '#C1C1C1'
+    HP_GREEN = '#54F400'
+    HP_YELLOW = '#FFF91F'
+    HP_RED = '#F40040'
 
     def __init__(self,
                  pokedex_id: int,
