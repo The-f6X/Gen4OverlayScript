@@ -873,7 +873,7 @@ class Pokemon:
         self.max_hp = max_hp
         self.level = level
         self.is_egg = egg
-        self.inactive = self.is_egg or cur_hp == 0
+        self.inactive = self.is_egg or cur_hp == 0 or pokedex_id == 0
 
         if cur_hp == 0:
             self.status = StatusCondition.FAINTED
