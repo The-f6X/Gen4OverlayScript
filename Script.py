@@ -10,7 +10,7 @@ from typing import Any, Dict, List, TextIO
 from matplotlib import pyplot
 from matplotlib.pyplot import clf as clear_figures
 
-PokeNamespace = namedtuple('PokeNamespace', ['input', 'assets', 'output', 'verbosity', 'silent'])
+PokeNamespace = namedtuple('PokeNamespace', ['input', 'assets', 'output', 'verbosity', 'quiet'])
 POKEMON_LIST = [
     "Bulbasaur",
     "Ivysaur",
@@ -1002,9 +1002,9 @@ def _parse_config() -> PokeNamespace:
                         action='count',
                         default=0,
                         help='increase output verbosity')
-    parser.add_argument('-S', '--silent',
+    parser.add_argument('-q', '--quiet',
                         action='store_true',
-                        help='silences the script - no output except for criticals and stack traces')
+                        help='script runs quietly - no output except for criticals and stack traces')
     return parser.parse_args()
 
 
@@ -1058,7 +1058,7 @@ class Overlay:
 
 if __name__ == '__main__':
     params = _parse_config()
-    if params.silent:
+    if params.quiet:
         log_level = logging.CRITICAL
     elif params.verbosity:
         log_level = logging.DEBUG
