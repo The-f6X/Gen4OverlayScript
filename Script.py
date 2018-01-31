@@ -826,7 +826,7 @@ class _StatusConditionMeta(EnumMeta):
 
     def __call__(cls, value, *args, **kwargs):
         if value in cls._SLEEP_RANGE:  # handles sleep state edge case
-            value = 1  # normalizes multiple values for sleep to the enum value
+            value = 1                  # normalizes multiple values for sleep to the enum value
         return super().__call__(value, *args, **kwargs)
 
     def __contains__(self, item):
@@ -873,7 +873,7 @@ class Pokemon:
         self.max_hp = max_hp
         self.level = level
         self.is_egg = egg
-        self.inactive = self.is_egg or cur_hp == 0 or pokedex_id == 0
+        self.inactive = self.is_egg or pokedex_id == 0
 
         if cur_hp == 0:
             self.status = StatusCondition.FAINTED
