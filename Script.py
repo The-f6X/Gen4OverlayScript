@@ -857,18 +857,18 @@ class StatusCondition(Enum, metaclass=_StatusConditionMeta):
 
 class Pokemon:
     def __init__(self,
-                 pokedex_id: int,
+                 national_id: int,
                  cur_hp: int,
                  max_hp: int,
                  level: int,
                  egg: bool,
                  status: StatusCondition):
-        self.id = pokedex_id
+        self.id = national_id
         self.cur_hp = cur_hp
         self.max_hp = max_hp
         self.level = level
         self.is_egg = egg
-        self.inactive = self.is_egg or pokedex_id == 0
+        self.inactive = self.is_egg or self.id == 0
 
         if cur_hp == 0:
             self.status = StatusCondition.FAINTED
@@ -885,7 +885,6 @@ class Pokemon:
 
 
 # endregion
-
 
 ################################################################################
 # region PokeParser
@@ -906,7 +905,7 @@ class TwitchPlaysParser:
             else:
                 status = StatusCondition(status_int)
 
-            return Pokemon(pokedex_id=poke_dict[slot_label],
+            return Pokemon(national_id=poke_dict[slot_label],
                            cur_hp=poke_dict['HP'],
                            max_hp=poke_dict['MAXHP'],
                            level=poke_dict['Lvl'],
