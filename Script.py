@@ -845,9 +845,6 @@ class StatusCondition(Enum, metaclass=_StatusConditionMeta):
     PARALYZED = 64
     TOXIC = 128
 
-    def __str__(self):
-        return self.name.title()
-
 
 # endregion
 
@@ -934,8 +931,8 @@ class Pokemon:
         elif self.id == 0:
             status = 'Empty'
         else:
-            status = str(self.status)
-        middle = f'STATUS{status.upper():{">15"}}'
+            status = self.status
+        middle = f'STATUS{status:{">15"}}'
 
         health = 'N/A' if self.inactive else f'{self.cur_hp}/{self.max_hp}'
         bottom = f'{health:{">21"}}'
