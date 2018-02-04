@@ -8,7 +8,7 @@ from enum import Enum, EnumMeta
 from typing import Any, Dict, List, TextIO
 
 from matplotlib import pyplot
-from matplotlib.pyplot import clf as clear_figures
+from matplotlib.pyplot import clf as pyplot_clear_figures
 
 PokeNamespace = namedtuple('PokeNamespace', ['input', 'assets', 'output', 'verbosity', 'quiet'])
 POKEMON_LIST = [
@@ -856,11 +856,6 @@ class StatusCondition(Enum, metaclass=_StatusConditionMeta):
 ################################################################################
 
 class Pokemon:
-    HP_BACKGROUND = '#C1C1C1'
-    HP_GREEN = '#54F400'
-    HP_YELLOW = '#FFF91F'
-    HP_RED = '#F40040'
-
     def __init__(self,
                  pokedex_id: int,
                  cur_hp: int,
@@ -879,72 +874,6 @@ class Pokemon:
             self.status = StatusCondition.FAINTED
         else:
             self.status = status
-
-    def render(self, index: int, assets_dir: str, output_dir: str):
-        pokemon_id = 'egg' if self.is_egg else self.id
-        pkmn_img = f'{assets_dir}{pokemon_id}.png'
-        party_path = f'{output_dir}__party{index + 1}.png'
-
-        shutil.copyfile(src=pkmn_img,
-                        dst=party_path)
-
-        with open(f'{output_dir}HP{index + 1}.txt', mode='w') as text_file:
-            text_file.write(self._emit())
-
-        healthbar_path = f'{output_dir}health{index + 1}.png'
-        if self.inactive:
-            shutil.copyfile(src=f'{assets_dir}Blank.png',
-                            dst=healthbar_path)
-        else:
-            self._render_health(healthbar_path)
-
-    def _emit(self) -> str:
-        template = '{}\n{}\n{}'
-
-        name = '--' if self.inactive else POKEMON_LIST[self.id-1].upper()
-        level = 'N/A' if self.inactive else f'LVL.{self.level:{"03"}}'
-        top = f'{name:{"<14"}}{level:{">7"}}'  # TODO get rid of numeric literals
-
-        if self.is_egg:
-            status = 'Egg'
-        elif self.id == 0:
-            status = 'Empty'
-        else:
-            status = self.status
-        middle = f'STATUS{status:{">15"}}'
-
-        health = 'N/A' if self.inactive else f'{self.cur_hp}/{self.max_hp}'
-        bottom = f'{health:{">21"}}'
-        return template.format(top, middle, bottom)
-
-    def _render_health(self, out_path: str):
-        clear_figures()
-        total_width = 10
-        health_percent = self.cur_hp / self.max_hp
-
-        if health_percent > 0.5:
-            hp_color = self.HP_GREEN
-        elif 0.25 < health_percent <= 0.5:
-            hp_color = self.HP_YELLOW
-        else:
-            hp_color = self.HP_RED
-
-        pyplot.barh(y=0,
-                    width=total_width,
-                    color=self.HP_BACKGROUND)
-
-        fill_width = health_percent * total_width
-        pyplot.barh(y=0,
-                    width=fill_width,
-                    color=hp_color)
-
-        pyplot.axis('off')
-
-        pyplot.savefig(out_path,
-                       bbox_inches='tight',
-                       pad_inches=0,
-                       transparent=True,
-                       dpi=96)
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, Pokemon):
@@ -1025,6 +954,13 @@ def _parse_config() -> PokeNamespace:
 
 
 class Overlay:
+    HP_BACKGROUND = '#C1C1C1'
+    HP_GREEN = '#54F400'
+    HP_YELLOW = '#FFF91F'
+    HP_RED = '#F40040'
+    HP_WIDTH = 10
+    RENDER_DELAY = 0.5
+
     def __init__(self, config: PokeNamespace):
         self._assets_dir = config.assets
         self._output_dir = config.output
@@ -1046,7 +982,7 @@ class Overlay:
             if not fresh_state:
                 logging.debug('teamfile empty, skipping update')
                 continue
-            time.sleep(1)
+            time.sleep(self.RENDER_DELAY)
             if fresh_state == self._saved_state:
                 logging.debug('teamfile unchanged since last loop, skipping')
                 continue
@@ -1057,11 +993,78 @@ class Overlay:
                 if self._slots[index] != team[index]:
                     logging.info(f'slot {index} changed, updating')
                     self._slots[index] = team[index]
-                    team[index].render(index, self._assets_dir, self._output_dir)
+                    self._render(index, team[index])
+
+    @staticmethod
+    def _emit(pokemon: Pokemon) -> str:
+        template = '{}\n{}\n{}'
+
+        name = '--' if pokemon.inactive else POKEMON_LIST[pokemon.id-1].upper()
+        level = 'N/A' if pokemon.inactive else f'LVL.{pokemon.level:{"03"}}'
+        top = f'{name:{"<14"}}{level:{">7"}}'  # TODO get rid of numeric literals
+
+        if pokemon.is_egg:
+            status = 'EGG'
+        elif pokemon.id == 0:
+            status = 'EMPTY'
+        else:
+            status = pokemon.status
+        middle = f'STATUS{status:{">15"}}'
+
+        health = 'N/A' if pokemon.inactive else f'{pokemon.cur_hp}/{pokemon.max_hp}'
+        bottom = f'{health:{">21"}}'
+        return template.format(top, middle, bottom)
 
     @staticmethod
     def _fetch_raw_team(handle: TextIO) -> str:
         return handle.read().strip()
+
+    @staticmethod
+    def _render_health(pokemon: Pokemon, out_path: str):
+        pyplot_clear_figures()
+        health_percent = pokemon.cur_hp / pokemon.max_hp
+
+        if health_percent > 0.5:
+            hp_color = Overlay.HP_GREEN
+        elif 0.25 < health_percent <= 0.5:
+            hp_color = Overlay.HP_YELLOW
+        else:
+            hp_color = Overlay.HP_RED
+
+        pyplot.barh(y=0,
+                    width=Overlay.HP_WIDTH,
+                    color=Overlay.HP_BACKGROUND)
+
+        fill_width = health_percent * Overlay.HP_WIDTH
+        pyplot.barh(y=0,
+                    width=fill_width,
+                    color=hp_color)
+
+        pyplot.axis('off')
+
+        pyplot.savefig(out_path,
+                       bbox_inches='tight',
+                       pad_inches=0,
+                       transparent=True,
+                       dpi=96)
+
+    def _render(self, index: int, pokemon: Pokemon):
+        pokemon_id = 'egg' if pokemon.is_egg else pokemon.id
+        pkmn_img = f'{self._assets_dir}{pokemon_id}.png'
+        party_path = f'{self._output_dir}__party{index + 1}.png'
+
+        shutil.copyfile(src=pkmn_img,
+                        dst=party_path)
+
+        with open(f'{self._output_dir}HP{index + 1}.txt', mode='w') as text_file:
+            text_file.write(self._emit(pokemon))
+
+        healthbar_path = f'{self._output_dir}health{index + 1}.png'
+        if pokemon.inactive:
+            shutil.copyfile(src=f'{self._assets_dir}Blank.png',
+                            dst=healthbar_path)
+        else:
+            self._render_health(pokemon, healthbar_path)
 
 
 # endregion
