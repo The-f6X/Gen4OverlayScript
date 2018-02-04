@@ -845,6 +845,9 @@ class StatusCondition(Enum, metaclass=_StatusConditionMeta):
     PARALYZED = 64
     TOXIC = 128
 
+    def __str__(self):
+        return self.name
+
 
 # endregion
 
@@ -876,30 +879,6 @@ class Pokemon:
             self.status = StatusCondition.FAINTED
         else:
             self.status = status
-
-    @staticmethod
-    def from_tpp_string(string: str) -> 'Pokemon':
-        pairs = [attr.replace(' ', '').split('=') for attr in string.split(',')]
-        slot_label: str = pairs[0][0]  # getting by index instead of trying to match PKM1, PKM2, etc
-        try:
-            poke_dict: Dict[str, int] = {pair[0]: int(pair[1]) for pair in pairs}
-
-            status_int = poke_dict['Status']
-            if status_int not in StatusCondition:
-                logging.warning(f'emulator yielded out of range status value [{status_int}] for slot {slot_label}')
-                status = StatusCondition.HEALTHY
-            else:
-                status = StatusCondition(status_int)
-
-            return Pokemon(pokedex_id=poke_dict[slot_label],
-                           cur_hp=poke_dict['HP'],
-                           max_hp=poke_dict['MAXHP'],
-                           level=poke_dict['Lvl'],
-                           egg=bool(poke_dict['Egg']),
-                           status=status)
-        except (AttributeError, ValueError):
-            logging.critical(f'failed to parse pokemon data, dumping:\n\n{string}\n\n{pairs}\n')
-            raise
 
     def render(self, index: int, assets_dir: str, output_dir: str):
         pokemon_id = 'egg' if self.is_egg else self.id
@@ -978,6 +957,46 @@ class Pokemon:
 
 # endregion
 
+
+################################################################################
+# region PokeParser
+################################################################################
+
+class TwitchPlaysParser:
+    @staticmethod
+    def parse(string: str) -> Pokemon:
+        pairs = [attr.replace(' ', '').split('=') for attr in string.split(',')]
+        slot_label: str = pairs[0][0]  # getting by index instead of trying to match PKM1, PKM2, etc
+        try:
+            poke_dict: Dict[str, int] = {pair[0]: int(pair[1]) for pair in pairs}
+
+            status_int = poke_dict['Status']
+            if status_int not in StatusCondition:
+                logging.warning(f'emulator yielded out of range status value [{status_int}] for slot {slot_label}')
+                status = StatusCondition.HEALTHY
+            else:
+                status = StatusCondition(status_int)
+
+            return Pokemon(pokedex_id=poke_dict[slot_label],
+                           cur_hp=poke_dict['HP'],
+                           max_hp=poke_dict['MAXHP'],
+                           level=poke_dict['Lvl'],
+                           egg=bool(poke_dict['Egg']),
+                           status=status)
+        except (AttributeError, ValueError):
+            logging.critical(f'failed to parse pokemon data, dumping:\n\n{string}\n\n{pairs}\n')
+            raise
+
+    @staticmethod
+    def parse_team(raw_team: str) -> List[Pokemon]:
+        lines = raw_team.splitlines()
+        filtered: List[str] = list(filter(bool, lines))
+        evens = filtered[::2]
+        return [TwitchPlaysParser.parse(item) for item in evens]
+
+
+# endregion
+
 ################################################################################
 # region Script
 ################################################################################
@@ -1012,6 +1031,7 @@ class Overlay:
         self._saved_state = ''
         self._slots: List[Pokemon] = [None for _ in range(6)]  # technically List<Pokemon?>
         self._team_path = config.input
+        self._parser = TwitchPlaysParser
 
     def run_forever(self):
         logging.info('Overlay loop running!')
@@ -1030,7 +1050,7 @@ class Overlay:
             if fresh_state == self._saved_state:
                 logging.debug('teamfile unchanged since last loop, skipping')
                 continue
-            team = self._parse_team(fresh_state)
+            team = self._parser.parse_team(fresh_state)
             self._saved_state = fresh_state
 
             for index in range(len(self._slots)):
@@ -1042,13 +1062,6 @@ class Overlay:
     @staticmethod
     def _fetch_raw_team(handle: TextIO) -> str:
         return handle.read().strip()
-
-    @staticmethod
-    def _parse_team(raw_team: str) -> List[Pokemon]:
-        lines = raw_team.splitlines()
-        filtered: List[str] = list(filter(bool, lines))
-        evens = filtered[::2]
-        return [Pokemon.from_tpp_string(item) for item in evens]
 
 
 # endregion
