@@ -1,15 +1,9 @@
-[![forthebadge](http://forthebadge.com/images/badges/made-with-python.svg)](http://forthebadge.com)[![forthebadge](http://forthebadge.com/images/badges/powered-by-electricity.svg)](http://forthebadge.com)
-
-[![Twitch](https://img.shields.io/badge/as%20seen%20on-twitch-6441A4.svg?style=for-the-badge)](http://www.twitch.tv/the_f6x)[![GitHub license](https://img.shields.io/github/license/The-f6X/Gen4OverlayScript.svg?style=for-the-badge)](https://github.com/The-f6X/Gen4OverlayScript/blob/master/LICENSE.txt)[![Waffle.io](https://img.shields.io/waffle/label/The-f6x/Gen4OverlayScript/in%20progress.svg?style=for-the-badge)](https://waffle.io/The-f6X/Gen4OverlayScript)
-
 <h1 align="center">
   Pokémon gen 4 and 5 overlay script
   <br>
 </h1>
 
 <h4 align="center">A script so you don't have to update your overlay by hand.</h4>
-
-
 
 <p align="center">
   <a href="#key-features">Key Features</a> •
@@ -21,10 +15,14 @@
 
 ![Demo](https://github.com/The-f6X/Gen4OverlayScript/blob/master/img/Demo.gif)
 
+[![forthebadge](http://forthebadge.com/images/badges/made-with-python.svg)](http://forthebadge.com)[![forthebadge](http://forthebadge.com/images/badges/powered-by-electricity.svg)](http://forthebadge.com)
+
+[![Twitch](https://img.shields.io/badge/as%20seen%20on-twitch-6441A4.svg?style=for-the-badge)](http://www.twitch.tv/the_f6x)[![GitHub license](https://img.shields.io/github/license/The-f6X/Gen4OverlayScript.svg?style=for-the-badge)](https://github.com/The-f6X/Gen4OverlayScript/blob/master/LICENSE.txt)
+
 ## Key Features
 
 * Autonomous 
-  - Quickly see changes to your overlay with no input on your end.
+  - Quickly see updates to your overlay with no manual input.
 * Customizable  
   - Choose what types of images you want and where they go.
 * Current health
@@ -39,7 +37,7 @@
 ## How To Use
 
 For this script to work, you need to have the following: 
- * [Python version 3.X](https://www.python.org/downloads/)
+ * [Python 3](https://www.python.org/downloads/)
  * [Open Broadcaster Software](https://obsproject.com/)
  * [DeSmuME](http://desmume.org/)
  * A generation 4 or 5 Pokémon rom
@@ -62,14 +60,14 @@ After the script is running in DeSmuME, you then need to run the python script.
 
 ```
 cd <path to folder>
-Python Script.py
+python Script.py
 ```
 
-Then over in OBS, you need to add image sources for the the team members and their health bars making sure to point to the files located in the /out/ folder. 
+Then over in OBS, you need to add image sources for the the team members and their health bars making sure to point to the files located in the `out/` folder. 
 
 ![screenshot](https://i.imgur.com/Qx0zwTF.png)
 
-Then add the text for each team member making sure to point to the text files in the /out/ folder. 
+Then add the text for each team member making sure to point to the text files in `out/`. 
 
 ![screenshot](https://i.imgur.com/XuRiQFT.png)
 
@@ -96,4 +94,4 @@ You can [download]() the latest version of the script for Windows since DeSmuME 
 > GitHub [@The-f6X](https://github.com/The-f6X) &nbsp;&middot;&nbsp;
 > Twitter [@The_f6X](https://twitter.com/The_f6X) &nbsp;&middot;&nbsp;
 > GitHub [@shawnrc](https://github.com/shawnrc) &nbsp;&middot;&nbsp;
-> Twitter [@shawnrc](https://twitter.com/shawn_rc)
+> Twitter [@\_shawnrc](https://twitter.com/_shawnrc)
