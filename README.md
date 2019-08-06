@@ -15,7 +15,7 @@
 
 ![Demo](https://github.com/The-f6X/Gen4OverlayScript/blob/master/img/Demo.gif)
 
-[![forthebadge](http://forthebadge.com/images/badges/made-with-python.svg)](http://forthebadge.com)[![forthebadge](http://forthebadge.com/images/badges/powered-by-electricity.svg)](http://forthebadge.com)
+[![forthebadge](http://forthebadge.com/images/badges/made-with-python.svg)](http://forthebadge.com)[![forthebadge](https://forthebadge.com/images/badges/does-not-contain-msg.svg)](https://forthebadge.com)
 
 [![Twitch](https://img.shields.io/badge/as%20seen%20on-twitch-6441A4.svg?style=for-the-badge)](http://www.twitch.tv/the_f6x)[![GitHub license](https://img.shields.io/github/license/The-f6X/Gen4OverlayScript.svg?style=for-the-badge)](https://github.com/The-f6X/Gen4OverlayScript/blob/master/LICENSE.txt)
 
