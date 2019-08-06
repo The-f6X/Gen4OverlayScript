@@ -862,13 +862,17 @@ class Pokemon:
                  max_hp: int,
                  level: int,
                  egg: bool,
-                 status: StatusCondition):
+                 status: StatusCondition,
+                 has_nickname: bool,
+                 nickname: str):
         self.id = national_id
         self.cur_hp = cur_hp
         self.max_hp = max_hp
         self.level = level
         self.is_egg = egg
         self.inactive = self.is_egg or self.id == 0
+        self.has_nickname = has_nickname
+        self.nickname = nickname
 
         if cur_hp == 0:
             self.status = StatusCondition.FAINTED
@@ -910,7 +914,9 @@ class TwitchPlaysParser:
                            max_hp=poke_dict['MAXHP'],
                            level=poke_dict['Lvl'],
                            egg=bool(poke_dict['Egg']),
-                           status=status)
+                           status=status,
+                           has_nickname=bool(poke_dict['HasNickname']),
+                           nickname=poke_dict['Nickname'])
         except (AttributeError, ValueError):
             logging.critical(f'failed to parse pokemon data, dumping:\n\n{string}\n\n{pairs}\n')
             raise
@@ -998,7 +1004,7 @@ class Overlay:
     def _emit(pokemon: Pokemon) -> str:
         template = '{}\n{}\n{}'
 
-        name = '--' if pokemon.inactive else POKEMON_LIST[pokemon.id-1].upper()
+        name = '--' if pokemon.inactive else (pokemon.nickname if pokemon.has_nickname else POKEMON_LIST[pokemon.id-1].upper())
         level = 'N/A' if pokemon.inactive else f'LVL.{pokemon.level:{"03"}}'
         top = f'{name:{"<14"}}{level:{">7"}}'  # TODO get rid of numeric literals
 
