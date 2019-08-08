@@ -862,13 +862,17 @@ class Pokemon:
                  max_hp: int,
                  level: int,
                  egg: bool,
-                 status: StatusCondition):
+                 status: StatusCondition,
+                 has_nickname: bool,
+                 nickname: str):
         self.id = national_id
         self.cur_hp = cur_hp
         self.max_hp = max_hp
         self.level = level
         self.is_egg = egg
         self.inactive = self.is_egg or self.id == 0
+        self.has_nickname = has_nickname
+        self.nickname = nickname
 
         if cur_hp == 0:
             self.status = StatusCondition.FAINTED
@@ -896,9 +900,9 @@ class TwitchPlaysParser:
         pairs = [attr.replace(' ', '').split('=') for attr in string.split(',')]
         slot_label: str = pairs[0][0]  # getting by index instead of trying to match PKM1, PKM2, etc
         try:
-            poke_dict: Dict[str, int] = {pair[0]: int(pair[1]) for pair in pairs}
+            poke_dict: Dict[str, str] = {pair[0]: pair[1] for pair in pairs}
 
-            status_int = poke_dict['Status']
+            status_int = int(poke_dict['Status'])
             if status_int not in StatusCondition:
                 logging.warning(f'emulator yielded out of range status value [{status_int}] for slot {slot_label}')
                 status = StatusCondition.HEALTHY
@@ -906,11 +910,13 @@ class TwitchPlaysParser:
                 status = StatusCondition(status_int)
 
             return Pokemon(national_id=poke_dict[slot_label],
-                           cur_hp=poke_dict['HP'],
-                           max_hp=poke_dict['MAXHP'],
-                           level=poke_dict['Lvl'],
+                           cur_hp=int(poke_dict['HP']),
+                           max_hp=int(poke_dict['MAXHP']),
+                           level=int(poke_dict['Lvl']),
                            egg=bool(poke_dict['Egg']),
-                           status=status)
+                           status=status,
+                           has_nickname=bool(poke_dict['HasNickname']),
+                           nickname=poke_dict['Nickname'])
         except (AttributeError, ValueError):
             logging.critical(f'failed to parse pokemon data, dumping:\n\n{string}\n\n{pairs}\n')
             raise
@@ -998,7 +1004,7 @@ class Overlay:
     def _emit(pokemon: Pokemon) -> str:
         template = '{}\n{}\n{}'
 
-        name = '--' if pokemon.inactive else POKEMON_LIST[pokemon.id-1].upper()
+        name = '--' if pokemon.inactive else (pokemon.nickname if pokemon.has_nickname else POKEMON_LIST[pokemon.id-1].upper())
         level = 'N/A' if pokemon.inactive else f'LVL.{pokemon.level:{"03"}}'
         top = f'{name:{"<14"}}{level:{">7"}}'  # TODO get rid of numeric literals
 
