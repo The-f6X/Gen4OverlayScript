@@ -455,7 +455,7 @@ Seen = 0
 Own = 0
 
 while true do
-	if emu.framecount() % 30 == 1 then
+	if emu.framecount() % 150 == 1 then
 		BadgeData[1] = 0
 		BadgeData[2] = 0
 		BadgeData[3] = 0
