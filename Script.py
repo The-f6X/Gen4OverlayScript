@@ -900,9 +900,9 @@ class TwitchPlaysParser:
         pairs = [attr.replace(' ', '').split('=') for attr in string.split(',')]
         slot_label: str = pairs[0][0]  # getting by index instead of trying to match PKM1, PKM2, etc
         try:
-            poke_dict: Dict[str, int] = {pair[0]: int(pair[1]) for pair in pairs}
+            poke_dict: Dict[str, str] = {pair[0]: pair[1] for pair in pairs}
 
-            status_int = poke_dict['Status']
+            status_int = int(poke_dict['Status'])
             if status_int not in StatusCondition:
                 logging.warning(f'emulator yielded out of range status value [{status_int}] for slot {slot_label}')
                 status = StatusCondition.HEALTHY
@@ -910,9 +910,9 @@ class TwitchPlaysParser:
                 status = StatusCondition(status_int)
 
             return Pokemon(national_id=poke_dict[slot_label],
-                           cur_hp=poke_dict['HP'],
-                           max_hp=poke_dict['MAXHP'],
-                           level=poke_dict['Lvl'],
+                           cur_hp=int(poke_dict['HP']),
+                           max_hp=int(poke_dict['MAXHP']),
+                           level=int(poke_dict['Lvl']),
                            egg=bool(poke_dict['Egg']),
                            status=status,
                            has_nickname=bool(poke_dict['HasNickname']),
