@@ -14,6 +14,7 @@ local DecryptedPKMData = {}
 local EncryptedOffset
 local EncryptedData
 local EncryptedPKMData = {}
+
 local ID = {}
 local HP = {}
 local MAXHP = {}
@@ -33,6 +34,9 @@ local MAXPP4 = {}
 local Status = {}
 local Gender = {}
 local Egg = {}
+local HasNickname = {}
+local Nicknames = {"", "", "", "", "",""}
+
 local ID2 = {}
 local HP2 = {}
 local MAXHP2 = {}
@@ -52,6 +56,9 @@ local MAXPP4_2 = {}
 local Status2 = {}
 local Gender2 = {}
 local Egg2 = {}
+local HasNickname_2 = {}
+local Nicknames_2 = {"", "", "", "", "", ""}
+
 local Valid
 local BadgeSet1
 local BadgeSet2
@@ -67,6 +74,17 @@ PPVal[0] = 0x00
 
 function rand(seed) -- Thanks Kaphotics
 	return (0x4e6d*(seed%65536)+((0x41c6*(seed%65536)+0x4e6d*math.floor(seed/65536))%65536)*65536+0x6073)%4294967296
+end
+
+function toCharacter(character)
+	-- TODO: full character map, NOTE: not equivalent to Gen III map
+	if character >= 43 and character <= 68 then
+		return character + 22
+	end
+	if character >= 69 and character <= 94 then
+		return character + 28
+	end
+	return string.byte(' ')
 end
 
 function ReadSeen(offset)
@@ -254,6 +272,21 @@ function ReadParty(offset)
 			end
 
 			Egg[CurrentPokemon] = bit.rshift(bit.band(DecryptedPKMData[0x3C], 0x40), 0x06)
+			HasNickname[CurrentPokemon] = bit.rshift(bit.band(DecryptedPKMData[0x3C], 0x80), 0x07)
+			
+			Nicknames[CurrentPokemon] = string.char(
+				toCharacter(DecryptedPKMData[0x49]), -- encoding is weird, wide chars?
+				toCharacter(DecryptedPKMData[0x4B]),
+				toCharacter(DecryptedPKMData[0x4D]),
+				toCharacter(DecryptedPKMData[0x4F]),
+				toCharacter(DecryptedPKMData[0x51]),
+				toCharacter(DecryptedPKMData[0x53]),
+				toCharacter(DecryptedPKMData[0x55]),
+				toCharacter(DecryptedPKMData[0x57]),
+				toCharacter(DecryptedPKMData[0x59]),
+				toCharacter(DecryptedPKMData[0x5B]),
+				toCharacter(DecryptedPKMData[0x5D]))
+
 			Gender[CurrentPokemon] = bit.rshift(bit.band(DecryptedPKMData[0x41], 0x06), 0x01) 
 			Status[CurrentPokemon] = DecryptedPKMData[0x89]
 			HP[CurrentPokemon] = DecryptedPKMData[0x8F] + bit.lshift(DecryptedPKMData[0x90], 8)
@@ -284,6 +317,8 @@ function ReadParty(offset)
 			MAXPP3_2[CurrentPokemon] = MAXPP3[CurrentPokemon]
 			MAXPP4_2[CurrentPokemon] = MAXPP4[CurrentPokemon]
 			Egg2[CurrentPokemon] = Egg[CurrentPokemon]
+			HasNickname_2[CurrentPokemon] = HasNickname[CurrentPokemon]
+			Nicknames_2[CurrentPokemon] = Nicknames[CurrentPokemon]
 			Gender2[CurrentPokemon] = Gender[CurrentPokemon]
 			Status2[CurrentPokemon] = Status[CurrentPokemon]
 			HP2[CurrentPokemon] = HP[CurrentPokemon]
@@ -444,6 +479,8 @@ for i = 1, 6, 1 do
 	MAXPP3_2[i] = 0
 	MAXPP4_2[i] = 0
 	Egg2[i] = 0
+	HasNickname_2[i] = 0
+	Nicknames_2[i] = string.char()
 	Gender2[i] = 0
 	Status2[i] = 0
 	HP2[i] = 0
@@ -551,7 +588,7 @@ while true do
 		print("\n")
 
 		for i = 1, 6, 1 do
-			file:write(string.format("PKM%d = %d, Gender = %d,  HP = %d, MAXHP = %d, Lvl = %d, Status = %d, Egg = %d", i, ID2[i], Gender2[i], HP2[i], MAXHP2[i], Lvl2[i], Status2[i], Egg2[i]))
+			file:write(string.format("PKM%d = %d, Gender = %d,  HP = %d, MAXHP = %d, Lvl = %d, Status = %d, Egg = %d, HasNickname = %d, Nickname = %s", i, ID2[i], Gender2[i], HP2[i], MAXHP2[i], Lvl2[i], Status2[i], Egg2[i], HasNickname_2[i], Nicknames_2[i]))
 			file:write("\n")
 			file:write(string.format("Move1 = %d %d/%d, Move2 = %d %d/%d, Move3 = %d %d/%d, Move4 = %d %d/%d", Move1_2[i], PP1_2[i], MAXPP1_2[i], Move2_2[i], PP2_2[i], MAXPP2_2[i], Move3_2[i], PP3_2[i], MAXPP3_2[i], Move4_2[i], PP4_2[i], MAXPP4_2[i]))
 			file:write("\n")
